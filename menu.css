@@ -1,0 +1,937 @@
+/* ========== MENU.CSS ==========
+   Головне меню, stats panel, user info,
+   auth modal, device controls, language switcher
+   ================================================ */
+
+/* =============================================
+   НОВЕ МЕНЮ — Grid Layout (v8.3)
+   ============================================= */
+
+/* --- Фон головного меню --- */
+#main-menu {
+    background: radial-gradient(ellipse at 50% 0%, #2a1a00 0%, #0d0a04 60%, #050301 100%);
+    overflow: hidden;
+}
+
+/* Плаваючі частинки — CSS-only */
+#main-menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(2px 2px at 15% 25%, rgba(255,200,0,0.35), transparent),
+        radial-gradient(2px 2px at 35% 65%, rgba(255,160,0,0.25), transparent),
+        radial-gradient(3px 3px at 55% 15%, rgba(255,180,0,0.3), transparent),
+        radial-gradient(2px 2px at 75% 75%, rgba(255,220,0,0.28), transparent),
+        radial-gradient(1px 1px at 10% 55%, rgba(255,255,150,0.2), transparent),
+        radial-gradient(1px 1px at 65% 40%, rgba(255,200,80,0.18), transparent),
+        radial-gradient(2px 2px at 88% 20%, rgba(255,160,0,0.22), transparent),
+        radial-gradient(1px 1px at 45% 85%, rgba(255,220,0,0.2), transparent),
+        radial-gradient(2px 2px at 92% 60%, rgba(255,180,0,0.25), transparent);
+    animation: menuParticleDrift 25s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#main-menu::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(180,80,0,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes menuParticleDrift {
+    0%   { transform: translateY(0)   translateX(0);  opacity: 0.8; }
+    33%  { transform: translateY(-18px) translateX(8px); opacity: 1; }
+    66%  { transform: translateY(-8px)  translateX(-6px); opacity: 0.85; }
+    100% { transform: translateY(0)   translateX(0);  opacity: 0.8; }
+}
+
+#main-menu > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Заголовок меню --- */
+.menu-title {
+    font-size: clamp(1.6rem, 4vw, 2.2rem) !important;
+    letter-spacing: 4px !important;
+    background: linear-gradient(180deg, #ffe066 0%, #ffab00 50%, #c76b00 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    filter: drop-shadow(0 0 14px rgba(255,180,0,0.5));
+    margin-bottom: 4px !important;
+}
+
+.menu-title-line {
+    display: block;
+    height: 1px;
+    width: 70%;
+    background: linear-gradient(90deg, transparent, rgba(255,160,0,0.5), transparent);
+    margin: 0 auto 18px;
+}
+
+/* --- Панель користувача --- */
+.user-panel {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: rgba(255,140,0,0.07);
+    border: 1px solid rgba(255,140,0,0.2);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    width: 100%;
+    max-width: 480px;
+}
+
+.user-panel.hidden { display: none !important; }
+
+.user-avatar-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff9500, #c76000);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    border: 2px solid rgba(255,180,0,0.4);
+    flex-shrink: 0;
+}
+
+.user-panel-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.user-email-text {
+    color: #ffd080;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-gold-text {
+    color: #ffdc5e;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(255,180,0,0.5);
+}
+
+.user-panel-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.icon-btn-menu {
+    width: 32px; height: 32px;
+    background: rgba(255,140,0,0.1);
+    border: 1px solid rgba(255,140,0,0.25);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    transition: all var(--transition-fast);
+    color: white;
+}
+
+.icon-btn-menu:hover {
+    background: rgba(255,140,0,0.25);
+    transform: scale(1.1);
+}
+
+/* =============================================
+   GRID КНОПОК МЕНЮ
+   ============================================= */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 12px;
+}
+
+/* Заглушка для порожнього місця в сітці */
+.menu-grid-empty {
+    display: block;
+}
+
+/* --- Головна кнопка (всю ширину) --- */
+.menu-btn-primary {
+    grid-column: span 2;
+    padding: 16px 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #1a0a00;
+    background: linear-gradient(135deg, #ffcf40 0%, #ff9500 55%, #e07000 100%);
+    box-shadow: 0 4px 20px rgba(255,140,0,0.35), inset 0 1px 0 rgba(255,255,150,0.3);
+    transition: all var(--transition-fast);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    transition: left 0.5s ease;
+}
+
+.menu-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(255,140,0,0.5), inset 0 1px 0 rgba(255,255,150,0.35);
+    filter: brightness(1.07);
+}
+
+.menu-btn-primary:hover::after { left: 100%; }
+.menu-btn-primary:active { transform: translateY(0); }
+
+.menu-btn-primary:focus-visible {
+    outline: 3px solid #ffde7a;
+    outline-offset: 3px;
+}
+
+/* --- Звичайна кнопка (половина ширини) --- */
+.menu-btn-secondary {
+    padding: 13px 12px;
+    border: 1px solid rgba(255,140,0,0.28);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: clamp(0.78rem, 2vw, 0.88rem);
+    font-weight: 600;
+    color: #ffe0a0;
+    background: linear-gradient(135deg, rgba(60,32,0,0.92) 0%, rgba(38,18,0,0.96) 100%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,180,0,0.06);
+    transition: all var(--transition-fast);
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.3px;
+}
+
+.menu-btn-secondary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,200,80,0.1), transparent);
+    transition: left 0.45s ease;
+}
+
+.menu-btn-secondary:hover {
+    background: linear-gradient(135deg, rgba(90,46,0,0.96) 0%, rgba(60,28,0,0.99) 100%);
+    border-color: rgba(255,160,0,0.5);
+    color: #ffd880;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 18px rgba(255,120,0,0.22);
+}
+
+.menu-btn-secondary:hover::after { left: 100%; }
+.menu-btn-secondary:active { transform: translateY(0); }
+
+.menu-btn-secondary:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+/* --- Auth кнопки (вхід/реєстрація) --- */
+.menu-btn-auth-primary {
+    padding: 13px 16px;
+    border: 1px solid rgba(52,152,219,0.45);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: clamp(0.82rem, 2vw, 0.9rem);
+    font-weight: 600;
+    color: #a8d8f0;
+    background: linear-gradient(135deg, rgba(20,50,90,0.92) 0%, rgba(10,30,60,0.96) 100%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    transition: all var(--transition-fast);
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+
+.menu-btn-auth-primary:hover {
+    background: linear-gradient(135deg, rgba(30,70,120,0.96) 0%, rgba(20,50,100,0.99) 100%);
+    border-color: rgba(52,152,219,0.7);
+    color: #d0ecff;
+    transform: translateY(-2px);
+}
+
+.menu-btn-auth-secondary {
+    padding: 13px 16px;
+    border: 1px solid rgba(46,204,113,0.35);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: clamp(0.82rem, 2vw, 0.9rem);
+    font-weight: 600;
+    color: #a0e8c0;
+    background: linear-gradient(135deg, rgba(10,50,30,0.92) 0%, rgba(5,30,15,0.96) 100%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    transition: all var(--transition-fast);
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+
+.menu-btn-auth-secondary:hover {
+    background: linear-gradient(135deg, rgba(15,70,40,0.96) 0%, rgba(8,45,22,0.99) 100%);
+    border-color: rgba(46,204,113,0.55);
+    color: #c0f0d8;
+    transform: translateY(-2px);
+}
+
+/* --- Кнопка виходу (небезпечна, всю ширину) --- */
+.menu-btn-danger {
+    grid-column: span 2;
+    padding: 11px 20px;
+    border: 1px solid rgba(200,60,0,0.28);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: rgba(255,160,120,0.72);
+    background: rgba(70,15,0,0.38);
+    transition: all var(--transition-fast);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+}
+
+.menu-btn-danger:hover {
+    background: rgba(110,25,0,0.58);
+    color: rgba(255,185,145,0.92);
+    border-color: rgba(220,80,0,0.5);
+    transform: translateY(-1px);
+}
+
+.menu-btn-danger:active { transform: translateY(0); }
+
+/* --- Стара .menu-btn (для решти екранів) --- */
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 250px;
+}
+
+.menu-btn {
+    padding: 15px 30px;
+    font-size: 1.15em;
+    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--color-text-dark);
+    font-weight: bold;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 15px var(--color-gold-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    width: 100%;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(241, 196, 15, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.menu-btn:hover::after { left: 100%; }
+
+.menu-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px var(--color-gold-glow);
+}
+
+.menu-btn:focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+/* --- Stats Panel --- */
+.stats-panel {
+    position: relative;
+    right: auto; top: auto;
+    margin: 15px auto;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--color-gold);
+    box-shadow: var(--shadow-gold);
+    color: var(--color-text);
+    min-width: 200px;
+    width: fit-content;
+    text-align: center;
+    z-index: 50;
+    backdrop-filter: blur(5px);
+}
+
+.stats-panel h3 {
+    color: var(--color-gold);
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.stats-content {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.stat-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-column h4 {
+    margin: 0 0 10px 0;
+    color: var(--color-blue);
+}
+
+.stat-separator {
+    width: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.9em;
+}
+
+.stat-item span:last-child {
+    font-weight: bold;
+    color: var(--color-gold);
+}
+
+/* --- Stats Modal --- */
+.stats-modal-content {
+    position: relative;
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border: 2px solid rgba(241, 196, 15, 0.4);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(241, 196, 15, 0.15);
+    padding: 30px 25px 25px;
+    max-width: 440px;
+    width: 92%;
+    text-align: center;
+    animation: statsSlideIn 0.35s ease-out;
+}
+
+@keyframes statsSlideIn {
+    from { opacity: 0; transform: scale(0.85) translateY(30px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.stats-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stats-trophy {
+    font-size: 2.2em;
+    animation: trophyPulse 2s ease-in-out infinite;
+}
+
+@keyframes trophyPulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.5)); }
+    50%       { transform: scale(1.15); filter: drop-shadow(0 0 15px rgba(241, 196, 15, 0.8)); }
+}
+
+.stats-modal-header h2 {
+    margin: 0;
+    font-size: 1.6em;
+    color: var(--color-gold);
+    text-shadow: 0 2px 10px rgba(241, 196, 15, 0.3);
+    letter-spacing: 1px;
+}
+
+.stats-cards {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.stats-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 16px 14px;
+    backdrop-filter: blur(10px);
+    transition: transform var(--transition-fast), border-color var(--transition-normal);
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(241, 196, 15, 0.4);
+}
+
+.stats-card-icon { font-size: 2em; margin-bottom: 4px; }
+
+.stats-card h4 {
+    margin: 0 0 12px;
+    color: var(--color-blue);
+    font-size: 1em;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 8px;
+    margin: 3px 0;
+    border-radius: 6px;
+    font-size: 0.85em;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.stats-row.win  { background: rgba(46, 204, 113, 0.1); }
+.stats-row.lose { background: rgba(231, 76, 60, 0.1); }
+
+.stats-label { color: rgba(255, 255, 255, 0.7); }
+
+.stats-value {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.1em;
+}
+
+.stats-row.win .stats-value  { color: var(--color-green); }
+.stats-row.lose .stats-value { color: var(--color-red); }
+
+.stats-winrate-bar {
+    width: 100%; height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.stats-winrate-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--color-gold), var(--color-green));
+    width: 0%;
+    transition: width 0.8s ease-out;
+}
+
+.stats-winrate-text {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 4px;
+}
+
+.stats-close-btn {
+    position: absolute;
+    top: 12px; right: 14px;
+    background: none; border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.4em;
+    cursor: pointer;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+    line-height: 1;
+}
+
+.stats-close-btn:hover {
+    color: var(--color-red);
+    transform: scale(1.2);
+}
+
+/* --- User Info --- */
+.user-info {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.2em;
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold);
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+}
+
+.user-info.hidden { display: none; }
+
+#user-email-display {
+    color: var(--color-text);
+    font-weight: bold;
+}
+
+#user-gold-display {
+    color: #ffd700;
+    text-shadow: 0 0 5px #d35400;
+    font-weight: bold;
+}
+
+#stats-toggle-btn {
+    background: none; border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+#stats-toggle-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Auth buttons in menu (old screens) --- */
+.auth-btn.menu-btn {
+    background: var(--color-blue);
+    color: white;
+    box-shadow: 0 4px 0 var(--color-blue-dark);
+}
+
+.auth-btn.menu-btn:hover { background: var(--color-blue-dark); }
+
+.close-btn {
+    background: var(--color-red) !important;
+    box-shadow: 0 4px 0 var(--color-red-dark) !important;
+    color: white !important;
+}
+
+.close-btn:hover { background: var(--color-red-dark) !important; }
+
+/* --- Auth Modal --- */
+.auth-modal-content {
+    background: #2c3e50 !important;
+    color: white !important;
+    border: 2px solid var(--color-gold);
+    max-width: 400px;
+    width: 90%;
+}
+
+.auth-modal-content h2 {
+    color: var(--color-gold);
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #34495e;
+    border-radius: var(--radius-sm);
+    background: var(--color-text);
+    color: var(--color-text-dark);
+    font-size: 1em;
+}
+
+.auth-input:focus {
+    border-color: var(--color-blue);
+    outline: none;
+}
+
+.auth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* --- Room Code --- */
+.room-code-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.room-code,
+.room-code-display {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 1.2em;
+    border: 1px dashed var(--color-gold);
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text;
+}
+
+.copy-btn {
+    background: var(--color-blue);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.2em;
+    color: white;
+    transition: transform 0.1s, background var(--transition-fast);
+    box-shadow: 0 3px 0 var(--color-blue-dark);
+}
+
+.copy-btn:hover { background: var(--color-blue-dark); transform: translateY(-2px); }
+.copy-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 var(--color-blue-dark); }
+
+/* --- Device Toggle Controls --- */
+.device-controls {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.device-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 50px; height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.device-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.device-btn.active {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-text-dark);
+    box-shadow: var(--shadow-gold);
+    transform: scale(1.1);
+}
+
+/* --- Sound Toggle --- */
+.sound-toggle {
+    display: none !important;
+}
+
+.sound-toggle:hover {
+    display: none !important;
+}
+
+/* --- Language switcher focus --- */
+.lang-btn:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    #main-menu {
+        overflow-y: auto;
+        padding-top: 20px;
+        justify-content: flex-start;
+    }
+
+    .menu-grid { max-width: 95%; gap: 8px; }
+    .menu-btn-primary { padding: 15px; font-size: 1rem; }
+    .menu-btn-secondary { padding: 12px 10px; }
+
+    /* Стара система кнопок для інших екранів */
+    .menu-buttons { width: 200px; gap: 10px; }
+    .menu-btn { padding: 12px 20px; font-size: 1.05em; }
+}
+
+@media (max-width: 420px) {
+    .menu-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
+    .menu-btn-secondary { padding: 11px 8px; font-size: 0.78rem; }
+    .menu-title { font-size: 1.5rem !important; letter-spacing: 2px !important; }
+    .user-panel { padding: 8px 11px; }
+    .user-email-text { font-size: 0.7rem; }
+}
+
+@media (max-width: 550px) {
+    .stats-panel {
+        margin: 5px auto 10px;
+        transform: scale(0.9);
+        width: auto;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 500px) {
+    .stats-cards { flex-direction: column; gap: 10px; }
+    .stats-modal-content { padding: 20px 15px 15px; }
+    .stats-modal-header h2 { font-size: 1.3em; }
+}
+
+/* ========== LANGUAGE SWITCHER ========== */
+.language-switcher {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-full);
+    padding: 4px;
+    gap: 2px;
+    backdrop-filter: blur(10px);
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    /* Підіймаємо вище без накладання на кнопки */
+    margin-top: -2px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 15px;
+    border: none;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    position: relative;
+    white-space: nowrap;
+}
+
+/* --- CSS-намальовані прапорці (працюють на всіх платформах) --- */
+.lang-flag {
+    display: inline-block;
+    width: 22px;
+    height: 15px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    opacity: 0.6;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🇺🇦 Україна: синій верх + жовтий низ */
+.flag-ua {
+    background: linear-gradient(
+        to bottom,
+        #005BBB 0%, #005BBB 50%,
+        #FFD500 50%, #FFD500 100%
+    );
+}
+
+/* 🇺🇸 США: червоні та білі смуги + синій кантон */
+.flag-us {
+    background: repeating-linear-gradient(
+        to bottom,
+        #B22234 0px, #B22234 1.15px,
+        #fff    1.15px, #fff    2.3px
+    );
+    background-size: 100% 100%;
+}
+
+/* Синій квадрат зірок для US-прапора */
+.flag-us::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 40%; height: 54%;
+    background: #3C3B6E;
+}
+
+/* --- Активна мова --- */
+.lang-btn.active {
+    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
+    color: #1a1200;
+    box-shadow:
+        0 3px 12px rgba(241, 196, 15, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.lang-btn.active .lang-flag {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* --- Ховер на неактивній --- */
+.lang-btn:not(.active):hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    transform: translateY(-1px);
+}
+
+.lang-btn:not(.active):hover .lang-flag {
+    opacity: 0.9;
+}
+
+/* --- Розділювач --- */
+.lang-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.12);
+    flex-shrink: 0;
+}
+
+/* --- Focus --- */
+.lang-btn:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+}
+
+/* --- Анімація при зміні --- */
+.lang-btn.active {
+    animation: langActivate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes langActivate {
+    0%   { transform: scale(0.9); }
+    60%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}

@@ -1,0 +1,481 @@
+/* ========== ACHIEVEMENTS.CSS ==========
+   Система досягнень — повний редизайн
+   ======================================== */
+
+/* ── Анімації ───────────────────────────── */
+@keyframes achAppear {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes achNewPulse {
+    0%, 100% { box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    50%       { box-shadow: 0 4px 28px rgba(255,200,50,0.3), 0 0 0 2px rgba(255,200,50,0.4); }
+}
+
+@keyframes badgePop {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+@keyframes shimmerSlide {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+@keyframes legendaryGlow {
+    0%, 100% { box-shadow: 0 0 12px rgba(245,158,11,0.35); }
+    50%       { box-shadow: 0 0 22px rgba(245,158,11,0.6); }
+}
+
+@keyframes epicGlow {
+    0%, 100% { box-shadow: 0 0 10px rgba(168,85,247,0.3); }
+    50%       { box-shadow: 0 0 18px rgba(168,85,247,0.55); }
+}
+
+/* ── Екран ─────────────────────────────── */
+#achievements-screen {
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,200,50,0.2) transparent;
+}
+
+#achievements-screen::-webkit-scrollbar { width: 4px; }
+#achievements-screen::-webkit-scrollbar-thumb {
+    background: rgba(255,200,50,0.18);
+    border-radius: 4px;
+}
+
+#achievements-screen h1 {
+    font-size: clamp(1.3em, 4vw, 1.9em);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffe066 0%, #ffab00 50%, #c76b00 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: goldShimmer 3s linear infinite;
+    margin: 0;
+    padding: 22px 20px 10px;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 720px;
+    box-sizing: border-box;
+}
+
+/* ── Статистика ─────────────────────────── */
+#achievements-stats-row {
+    width: 100%;
+    max-width: 720px;
+    padding: 0 20px 14px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.ach-stats-inner {
+    background: linear-gradient(135deg, rgba(255,200,50,0.06), rgba(255,140,0,0.04));
+    border: 1px solid rgba(255,200,50,0.18);
+    border-radius: 14px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.ach-stats-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+    min-width: 70px;
+}
+
+.ach-stats-count {
+    font-size: 1.55em;
+    font-weight: 800;
+    color: #ffcf40;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.ach-stats-label {
+    font-size: 0.68em;
+    color: rgba(255,255,255,0.38);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 3px;
+}
+
+.ach-progress-bar-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ach-progress-bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ach-progress-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #ffe066, #ffab00, #e07000);
+    background-size: 200% auto;
+    animation: shimmerSlide 3s linear infinite;
+    box-shadow: 0 0 8px rgba(255,180,0,0.4);
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ach-progress-bar-text {
+    font-size: 0.78em;
+    color: #ffcf40;
+    font-weight: 700;
+    flex-shrink: 0;
+    min-width: 32px;
+    text-align: right;
+}
+
+/* ── Таби категорій ─────────────────────── */
+.achievements-tabs-wrap {
+    width: 100%;
+    max-width: 720px;
+    padding: 0 20px 14px;
+    flex-shrink: 0;
+    overflow-x: visible;
+    box-sizing: border-box;
+}
+.achievements-tabs-wrap::-webkit-scrollbar { display: none; }
+
+#achievements-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    width: 100%;
+}
+
+.ach-tab {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 13px;
+    border: 1px solid rgba(255,200,50,0.16);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.45);
+    font-family: var(--font-base);
+    font-size: 0.76em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.ach-tab:hover {
+    background: rgba(255,200,50,0.09);
+    color: rgba(255,255,255,0.75);
+    border-color: rgba(255,200,50,0.28);
+    transform: translateY(-1px);
+}
+
+.ach-tab.active {
+    background: linear-gradient(135deg, #ffcf40, #e07000);
+    border-color: transparent;
+    color: #1a0800;
+    box-shadow: 0 2px 12px rgba(255,160,0,0.35);
+    font-weight: 700;
+}
+
+.ach-tab-icon { font-size: 0.9em; }
+
+.ach-tab-count {
+    font-size: 0.7em;
+    background: rgba(0,0,0,0.2);
+    padding: 1px 6px;
+    border-radius: 8px;
+    opacity: 0.8;
+}
+
+.ach-tab.active .ach-tab-count { background: rgba(0,0,0,0.18); opacity: 0.9; }
+
+/* ── Список досягнень ───────────────────── */
+#achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+    max-width: 720px;
+    padding: 0 20px 16px;
+    box-sizing: border-box;
+}
+
+/* ── Картка досягнення ──────────────────── */
+.ach-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 14px 12px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    animation: achAppear 0.35s ease-out both;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Кольорова смуга ліворуч */
+.ach-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 6px; bottom: 6px;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+    opacity: 0.45;
+    transition: opacity 0.2s;
+}
+
+.ach-item[data-rarity="common"]::before    { background: #94a3b8; }
+.ach-item[data-rarity="rare"]::before      { background: #3b82f6; }
+.ach-item[data-rarity="epic"]::before      { background: #a855f7; }
+.ach-item[data-rarity="legendary"]::before { background: linear-gradient(180deg, #fbbf24, #d97706); }
+
+.ach-item.ach-unlocked::before { opacity: 1; }
+
+.ach-item.ach-unlocked {
+    border-color: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.045);
+}
+
+/* Glow по рідкості для відкритих */
+.ach-item.ach-unlocked[data-rarity="common"]    { box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+.ach-item.ach-unlocked[data-rarity="rare"]      { box-shadow: 0 2px 14px rgba(59,130,246,0.14); }
+.ach-item.ach-unlocked[data-rarity="epic"]      { box-shadow: 0 2px 14px rgba(168,85,247,0.16); }
+.ach-item.ach-unlocked[data-rarity="legendary"] { box-shadow: 0 2px 16px rgba(245,158,11,0.2); }
+
+.ach-item.ach-new {
+    animation: achNewPulse 2s ease-in-out 3;
+}
+
+.ach-item.ach-locked { opacity: 0.48; }
+
+.ach-item:hover:not(.ach-locked) {
+    transform: translateX(3px);
+    border-color: rgba(255,255,255,0.13);
+    background: rgba(255,255,255,0.055);
+}
+
+/* ── Іконка ─────────────────────────────── */
+.ach-icon-wrap {
+    position: relative;
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: box-shadow 0.3s;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+}
+
+.ach-item[data-rarity="common"]    .ach-icon-wrap { background: rgba(148,163,184,0.1);  border-color: rgba(148,163,184,0.28); }
+.ach-item[data-rarity="rare"]      .ach-icon-wrap { background: rgba(59,130,246,0.1);   border-color: rgba(59,130,246,0.28); }
+.ach-item[data-rarity="epic"]      .ach-icon-wrap { background: rgba(168,85,247,0.1);   border-color: rgba(168,85,247,0.28); }
+.ach-item[data-rarity="legendary"] .ach-icon-wrap { background: rgba(245,158,11,0.1);   border-color: rgba(245,158,11,0.32); }
+
+.ach-item.ach-unlocked[data-rarity="rare"]      .ach-icon-wrap { box-shadow: 0 0 12px rgba(59,130,246,0.28); }
+.ach-item.ach-unlocked[data-rarity="epic"]      .ach-icon-wrap { box-shadow: 0 0 14px rgba(168,85,247,0.32); animation: epicGlow 3s ease-in-out infinite; }
+.ach-item.ach-unlocked[data-rarity="legendary"] .ach-icon-wrap { box-shadow: 0 0 16px rgba(245,158,11,0.38); animation: legendaryGlow 2.5s ease-in-out infinite; }
+
+.ach-icon { font-size: 1.6em; line-height: 1; display: block; }
+
+.ach-icon-locked { opacity: 0.3; filter: grayscale(1); }
+
+.ach-check {
+    position: absolute;
+    bottom: -4px; right: -4px;
+    width: 17px; height: 17px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.5em;
+    font-weight: 800;
+    color: white;
+    border: 1.5px solid rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.ach-new-badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 0.46em;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 5px;
+    letter-spacing: 0.5px;
+    animation: badgePop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 2px 8px rgba(239,68,68,0.55);
+}
+
+/* ── Інформація ─────────────────────────── */
+.ach-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ach-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ach-title {
+    font-size: 0.92em;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ach-item.ach-locked .ach-title { color: rgba(255,255,255,0.35); }
+
+.ach-rarity-badge {
+    font-size: 0.6em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    flex-shrink: 0;
+    padding: 2px 7px;
+    border-radius: 5px;
+}
+
+.ach-item[data-rarity="common"]    .ach-rarity-badge { color: #94a3b8; background: rgba(148,163,184,0.1);  border: 1px solid rgba(148,163,184,0.2); }
+.ach-item[data-rarity="rare"]      .ach-rarity-badge { color: #60a5fa; background: rgba(59,130,246,0.1);   border: 1px solid rgba(59,130,246,0.2); }
+.ach-item[data-rarity="epic"]      .ach-rarity-badge { color: #c084fc; background: rgba(168,85,247,0.1);   border: 1px solid rgba(168,85,247,0.2); }
+.ach-item[data-rarity="legendary"] .ach-rarity-badge { color: #fbbf24; background: rgba(245,158,11,0.12);  border: 1px solid rgba(245,158,11,0.25); }
+
+.ach-desc {
+    font-size: 0.74em;
+    color: rgba(255,255,255,0.38);
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ach-item.ach-unlocked .ach-desc { color: rgba(255,255,255,0.48); }
+
+/* ── Футер: прогрес + текст ─────────────── */
+.ach-footer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 3px;
+}
+
+.ach-progress-container {
+    flex: 1;
+    height: 5px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.ach-progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ach-item[data-rarity="common"]    .ach-progress-fill { background: #94a3b8; }
+.ach-item[data-rarity="rare"]      .ach-progress-fill { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.ach-item[data-rarity="epic"]      .ach-progress-fill { background: linear-gradient(90deg, #a855f7, #c084fc); }
+.ach-item[data-rarity="legendary"] .ach-progress-fill { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+.ach-progress-text {
+    font-size: 0.64em;
+    color: rgba(255,255,255,0.32);
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 40px;
+    text-align: right;
+}
+
+.ach-date {
+    font-size: 0.63em;
+    color: rgba(255,255,255,0.26);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.ach-reward-hint {
+    font-size: 0.68em;
+    font-weight: 700;
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 1px 6px;
+    border-radius: 5px;
+}
+
+.ach-item[data-rarity="common"]    .ach-reward-hint { color: #94a3b8; }
+.ach-item[data-rarity="rare"]      .ach-reward-hint { color: #60a5fa; background: rgba(59,130,246,0.1); }
+.ach-item[data-rarity="epic"]      .ach-reward-hint { color: #c084fc; background: rgba(168,85,247,0.1); }
+.ach-item[data-rarity="legendary"] .ach-reward-hint { color: #fbbf24; background: rgba(245,158,11,0.1); }
+
+/* ── Кнопка "Назад" ─────────────────────── */
+.achievements-back-btn {
+    max-width: 250px;
+    margin: 4px auto 24px;
+    width: 100%;
+    flex-shrink: 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* ── Бейдж на кнопці меню ───────────────── */
+#achievements-btn { position: relative; }
+
+#achievements-btn.has-badge::after {
+    content: '!';
+    position: absolute;
+    top: -5px; right: -5px;
+    width: 16px; height: 16px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.6em;
+    font-weight: 800;
+    line-height: 16px;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(239,68,68,0.6);
+    animation: badgePop 0.3s ease;
+}
+
+/* ── Адаптив ────────────────────────────── */
+@media (max-width: 600px) {
+    #achievements-screen h1 { font-size: 1.35em; padding: 16px 14px 8px; }
+    #achievements-stats-row, .achievements-tabs-wrap, #achievements-list { padding-left: 14px; padding-right: 14px; }
+    .achievements-back-btn { padding: 0 14px; }
+    .ach-item { padding: 10px 11px 10px 14px; gap: 10px; }
+    .ach-icon-wrap { width: 44px; height: 44px; }
+    .ach-icon { font-size: 1.4em; }
+    .ach-title { font-size: 0.86em; }
+    .ach-tab { padding: 6px 10px; font-size: 0.71em; }
+}

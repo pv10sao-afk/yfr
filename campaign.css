@@ -1,0 +1,179 @@
+/* ========== CAMPAIGN.CSS ==========
+   Кампанія та Драфт-екрани
+   ==================================== */
+
+/* --- Campaign Screen --- */
+#campaign-screen {
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding: 30px 20px;
+}
+
+.campaign-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.mission-card {
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-card:hover:not(.locked) {
+    transform: translateY(-5px);
+    border-color: var(--color-gold);
+    box-shadow: 0 8px 20px rgba(241, 196, 15, 0.3);
+}
+
+.mission-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+}
+
+.mission-card.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+}
+
+.mission-card.completed { border-color: var(--color-green); }
+
+.mission-card.completed::before {
+    content: '⭐';
+    position: absolute;
+    top: 8px; right: 8px;
+    font-size: 1.2em;
+}
+
+.mission-number { font-size: 2em; font-weight: bold; color: var(--color-gold); }
+.mission-name   { font-size: 1em; margin: 8px 0 5px; color: var(--color-text); }
+.mission-desc   { font-size: 0.8em; color: var(--color-text-muted); margin-bottom: 8px; }
+.mission-reward { font-size: 0.85em; color: var(--color-gold); }
+
+/* --- Draft Screen --- */
+#draft-screen {
+    justify-content: flex-start;
+    padding-top: 30px;
+    overflow-y: auto;
+}
+
+.draft-title {
+    font-size: 2em;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 10px rgba(241, 196, 15, 0.5);
+}
+
+.draft-counter {
+    font-size: 1.4em;
+    color: var(--color-gold);
+    font-weight: bold;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 24px;
+    border-radius: 20px;
+    border: 2px solid rgba(241, 196, 15, 0.3);
+}
+
+.draft-choices {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    min-height: 200px;
+}
+
+.draft-choice-card {
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    animation: draftCardAppear 0.4s ease-out both;
+}
+
+.draft-choice-card:nth-child(1) { animation-delay: 0s; }
+.draft-choice-card:nth-child(2) { animation-delay: 0.15s; }
+.draft-choice-card:nth-child(3) { animation-delay: 0.3s; }
+
+.draft-choice-card:hover {
+    transform: translateY(-15px) scale(1.08) !important;
+    box-shadow: 0 12px 30px rgba(241, 196, 15, 0.4);
+    border-color: var(--color-gold) !important;
+    z-index: 10;
+}
+
+@keyframes draftCardAppear {
+    from { opacity: 0; transform: translateY(30px) scale(0.8); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.draft-picked-anim {
+    animation: draftPick 0.4s ease-out forwards !important;
+    pointer-events: none;
+}
+
+@keyframes draftPick {
+    0%   { transform: scale(1); opacity: 1; }
+    50%  { transform: scale(1.2); opacity: 0.8; box-shadow: 0 0 30px rgba(46, 204, 113, 0.6); }
+    100% { transform: scale(0.5); opacity: 0; }
+}
+
+.draft-picked-section { width: 100%; max-width: 700px; text-align: center; }
+.draft-picked-section h3 { color: #bdc3c7; margin-bottom: 10px; font-size: 1em; }
+
+.draft-picked-list { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+.draft-mini-card {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.7em; font-weight: bold;
+    color: white;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: draftMiniAppear 0.3s ease-out;
+}
+
+.draft-mini-card.rarity-common    { background: #7f8c8d; }
+.draft-mini-card.rarity-rare      { background: var(--color-blue); }
+.draft-mini-card.rarity-epic      { background: var(--color-purple); }
+.draft-mini-card.rarity-legendary { background: var(--color-gold); color: #1a1a2e; }
+
+@keyframes draftMiniAppear {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.draft-waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 30px;
+    color: var(--color-gold);
+    font-size: 1.2em;
+}
+
+.draft-btn {
+    background: linear-gradient(135deg, #8e44ad, var(--color-purple)) !important;
+    border-color: #8e44ad !important;
+}
+
+.draft-btn:hover {
+    background: linear-gradient(135deg, var(--color-purple), #a66bc7) !important;
+    box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4) !important;
+}

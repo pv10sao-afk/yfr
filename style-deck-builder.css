@@ -1,0 +1,770 @@
+/* ========== STYLE-DECK-BUILDER.CSS ==========
+   Конструктор колоди: повний стиль + мобільний варіант.
+   Виокремлено з style.css.
+   Підключати в index.html ПІСЛЯ style.css (або замість відповідного блоку).
+   ============================================= */
+
+/* Deck Builder Reset - Should not be centered by default like screens */
+/* ================================================================
+   DECK BUILDER — FULL REDESIGN
+   Layout: sticky header + two-column main (left=deck, right=cards)
+   ================================================================ */
+
+#deck-builder {
+    justify-content: flex-start;
+    align-items: stretch;
+    background: linear-gradient(170deg, #0c1120 0%, #131a2e 55%, #0c1120 100%) !important;
+}
+
+/* ── HEADER ── */
+#deck-builder header {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(14px);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.5);
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    gap: 16px;
+}
+
+#deck-builder header h1 {
+    font-size: 1.25em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #f1c40f 0%, #e67e22 60%, #f1c40f 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: deckTitleShimmer 4s linear infinite;
+    margin: 0;
+}
+
+@keyframes deckTitleShimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* Slots progress pill */
+#deck-slots-info {
+    flex-shrink: 0;
+}
+
+.slots-progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 90px;
+}
+
+.slots-label {
+    font-size: 0.82em;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.5px;
+}
+
+#slots-filled { color: #f1c40f; }
+
+.slots-bar {
+    width: 90px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.slots-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f1c40f, #e67e22);
+    border-radius: 4px;
+    transition: width 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+    width: 0%;
+}
+
+/* Full deck = green */
+.slots-bar-fill.full {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+/* ── BACK BUTTON ── */
+.deck-back-btn {
+    height: 38px;
+    min-width: 110px;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    border: none;
+    border-radius: 10px;
+    color: #1a1a2e;
+    font-size: 0.9em;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+    transition: all 0.22s ease;
+    box-shadow: 0 4px 15px rgba(241,196,15,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+.deck-back-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    transition: left 0.45s ease;
+}
+.deck-back-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(241,196,15,0.55); }
+.deck-back-btn:hover::after { left: 100%; }
+.deck-back-btn:active { transform: translateY(1px); }
+
+/* ── HEADER RIGHT GROUP ── */
+.deck-header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+/* ── DECK STATS BAR (in header) ── */
+.deck-stats-bar {
+    display: flex;
+    gap: 8px;
+    background: transparent;
+}
+
+.deck-stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 4px 10px;
+    text-align: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 0.72em;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.deck-stat span {
+    color: #f1c40f;
+    font-weight: 800;
+    font-size: 1.1em;
+}
+
+.deck-clear-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.4);
+    font-size: 1em;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+.deck-clear-btn:hover {
+    background: rgba(239,68,68,0.15);
+    border-color: rgba(239,68,68,0.4);
+    color: #f87171;
+}
+
+/* ── TOP PANEL — SELECTED DECK STRIP ── */
+#selected-deck-section {
+    flex: 0 0 auto;
+    background: rgba(0,0,0,0.4);
+    border-bottom: 2px solid rgba(255,255,255,0.07);
+    padding: 10px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.deck-top-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.deck-panel-title {
+    font-size: 0.72em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.35);
+    flex-shrink: 0;
+}
+
+/* Empty hint (inline) */
+.deck-empty-hint {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.78em;
+}
+
+.hint-icon { font-size: 1.2em; opacity: 0.4; }
+
+/* ── DECK CARDS STRIP (horizontal scroll) ── */
+.deck-cards-strip {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px 6px;
+    min-height: 168px; /* enough for cards */
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.deck-cards-strip::-webkit-scrollbar { height: 5px; }
+.deck-cards-strip::-webkit-scrollbar-track { background: transparent; }
+.deck-cards-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 5px; }
+
+/* Cards inside the deck strip — slightly smaller + remove overlay on hover */
+.deck-cards-strip .card {
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.15s;
+    animation: deckCardIn 0.22s ease both;
+    position: relative;
+}
+
+@keyframes deckCardIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.deck-cards-strip .card:hover {
+    transform: translateY(-8px) scale(1.06);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6) !important;
+    z-index: 10;
+}
+
+/* Red ✕ badge on hover */
+.deck-cards-strip .card::after {
+    content: '✕';
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.18s;
+    pointer-events: none;
+    z-index: 20;
+    box-shadow: 0 2px 8px rgba(239,68,68,0.6);
+}
+
+.deck-cards-strip .card:hover::after {
+    opacity: 1;
+}
+
+/* ── MAIN LAYOUT (vertical flex) ── */
+#deck-builder main {
+    flex: 1;
+    overflow: hidden;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* ── BOTTOM PANEL — ALL CARDS ── */
+#all-cards-section {
+    background: transparent;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+}
+
+#all-cards-list-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 14px 14px;
+    padding-left: 74px;
+}
+
+#all-cards-list-wrapper::-webkit-scrollbar { width: 5px; }
+#all-cards-list-wrapper::-webkit-scrollbar-track { background: transparent; }
+#all-cards-list-wrapper::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 5px; }
+
+/* ── FILTER BAR ── */
+.deck-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    padding: 12px 14px 10px 74px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.filter-btn {
+    padding: 5px 13px;
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    font-size: 0.78em;
+    font-weight: 600;
+    transition: all 0.16s ease;
+    letter-spacing: 0.3px;
+}
+
+.filter-btn:hover {
+    border-color: rgba(241,196,15,0.5);
+    color: #f1c40f;
+    background: rgba(241,196,15,0.07);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    color: #1a1200;
+    border-color: transparent;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(241,196,15,0.3);
+}
+
+.deck-sort-select {
+    padding: 5px 9px;
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.65);
+    font-size: 0.76em;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.16s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.deck-sort-select:focus { border-color: rgba(241,196,15,0.5); }
+
+.deck-search {
+    padding: 5px 13px;
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    color: #ecf0f1;
+    font-size: 0.78em;
+    outline: none;
+    width: 150px;
+    transition: border-color 0.18s, background 0.18s;
+    margin-left: auto;
+}
+.deck-search:focus {
+    border-color: rgba(241,196,15,0.55);
+    background: rgba(255,255,255,0.08);
+}
+.deck-search::placeholder { color: rgba(255,255,255,0.28); }
+
+/* ── CARD GRID ── */
+.deck-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 4px 0 8px;
+    width: 100%;
+    /* natural card sizes — same as in battle */
+}
+
+.deck-grid .card {
+    position: relative;
+    margin: 0;
+    flex-shrink: 0;
+    /* width/height from .card base = 120×160px */
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.deck-grid .card:hover {
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.55) !important;
+    z-index: 5;
+}
+
+/* Dim cards already in deck */
+.deck-grid .card.in-deck::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(34,197,94,0.15);
+    border: 2px solid rgba(34,197,94,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8em;
+    color: rgba(34,197,94,0.6);
+    pointer-events: none;
+}
+
+/* ── CHALLENGES TAB INNER ── */
+#challenges-screen-inner {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── DECK / COLLECTION TABS ── */
+.deck-mode-tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px 0;
+    background: rgba(0,0,0,0.35);
+    flex-shrink: 0;
+}
+
+.deck-tab-btn {
+    padding: 7px 20px;
+    border: none;
+    border-radius: 10px 10px 0 0;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+    border-bottom: 3px solid transparent;
+}
+.deck-tab-btn:hover {
+    background: rgba(255,255,255,0.12);
+    color: #ddd;
+}
+.deck-tab-btn.active {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-bottom-color: var(--color-gold, #f0c040);
+}
+
+.deck-collection-counter {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+    padding-right: 4px;
+}
+
+/* ── LOCKED CARD OVERLAY ── */
+.deck-grid .card.locked-card {
+    cursor: default;
+    pointer-events: none;
+    filter: grayscale(0.3);
+}
+.deck-grid .card.locked-card::after {
+    content: '🔒';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(10, 12, 25, 0.68);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* ── THEME OVERRIDES ── */
+.theme-neon .filter-btn.active { background: linear-gradient(135deg, #00f5ff, #8b5cf6) !important; color: #0a0a1a !important; box-shadow: 0 2px 10px rgba(0,245,255,0.35) !important; }
+.theme-neon .filter-btn:hover  { border-color: rgba(0,245,255,0.5) !important; color: #00f5ff !important; background: rgba(0,245,255,0.07) !important; }
+.theme-neon .deck-search:focus  { border-color: rgba(0,245,255,0.5) !important; }
+.theme-neon .slots-bar-fill     { background: linear-gradient(90deg, #00f5ff, #8b5cf6) !important; }
+
+.theme-blood .filter-btn.active { background: linear-gradient(135deg, #dc2626, #991b1b) !important; color: #fff !important; box-shadow: 0 2px 10px rgba(220,38,38,0.35) !important; }
+.theme-blood .filter-btn:hover  { border-color: rgba(220,38,38,0.5) !important; color: #ef4444 !important; background: rgba(220,38,38,0.07) !important; }
+.theme-blood .deck-search:focus  { border-color: rgba(220,38,38,0.5) !important; }
+.theme-blood .slots-bar-fill     { background: linear-gradient(90deg, #dc2626, #ef4444) !important; }
+
+.theme-ocean .filter-btn.active { background: linear-gradient(135deg, #0ea5e9, #0284c7) !important; color: #fff !important; box-shadow: 0 2px 10px rgba(14,165,233,0.35) !important; }
+.theme-ocean .filter-btn:hover  { border-color: rgba(14,165,233,0.5) !important; color: #38bdf8 !important; background: rgba(14,165,233,0.07) !important; }
+.theme-ocean .deck-search:focus  { border-color: rgba(14,165,233,0.5) !important; }
+.theme-ocean .slots-bar-fill     { background: linear-gradient(90deg, #0ea5e9, #38bdf8) !important; }
+
+.theme-emerald .filter-btn.active { background: linear-gradient(135deg, #059669, #047857) !important; color: #fff !important; box-shadow: 0 2px 10px rgba(5,150,105,0.35) !important; }
+.theme-emerald .filter-btn:hover  { border-color: rgba(5,150,105,0.5) !important; color: #34d399 !important; background: rgba(5,150,105,0.07) !important; }
+.theme-emerald .deck-search:focus  { border-color: rgba(5,150,105,0.5) !important; }
+.theme-emerald .slots-bar-fill     { background: linear-gradient(90deg, #059669, #34d399) !important; }
+
+.theme-golden .filter-btn.active { background: linear-gradient(135deg, #fbbf24, #d97706) !important; color: #1a0e00 !important; box-shadow: 0 2px 10px rgba(217,119,6,0.4) !important; }
+.theme-golden .filter-btn:hover  { border-color: rgba(251,191,36,0.5) !important; color: #fbbf24 !important; background: rgba(251,191,36,0.07) !important; }
+.theme-golden .deck-search:focus  { border-color: rgba(251,191,36,0.5) !important; }
+.theme-golden .slots-bar-fill     { background: linear-gradient(90deg, #fbbf24, #f59e0b) !important; }
+
+/* Mobile fallback */
+@media (max-width: 700px) {
+    #deck-builder header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .deck-header-right {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .deck-stats-bar {
+        display: none;
+    }
+    .deck-cards-strip {
+        min-height: 140px;
+    }
+}
+
+
+
+/* ========== MOBILE MODE — DECK BUILDER ========== */
+
+/* Deck builder screen: scrollable column, no extra padding */
+body.mobile-mode #deck-builder {
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 0 !important;
+    height: 100%;
+}
+
+/* Sticky header */
+body.mobile-mode #deck-builder header {
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 8px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    align-items: center;
+    min-height: 60px;
+    justify-content: flex-start;
+}
+
+body.mobile-mode #deck-builder header h1 {
+    font-size: 0.85em;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.mobile-mode .deck-back-btn {
+    min-width: 72px !important;
+    height: 32px !important;
+    font-size: 0.78em !important;
+    padding: 0 8px !important;
+    order: -1;
+    flex-shrink: 0;
+    margin-right: 4px;
+}
+
+body.mobile-mode .deck-header-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+body.mobile-mode .deck-stats-bar {
+    display: none !important;
+}
+
+body.mobile-mode #deck-slots-info .slots-progress-wrap {
+    min-width: 70px;
+}
+
+body.mobile-mode .deck-clear-btn {
+    padding: 4px 8px;
+    font-size: 0.9em;
+}
+
+/* ── DECK STRIP (your selected cards) ── */
+body.mobile-mode #selected-deck-section {
+    flex-shrink: 0;
+    padding: 6px 8px 8px;
+    gap: 4px;
+}
+
+body.mobile-mode .deck-top-label {
+    padding-left: 0;
+}
+
+body.mobile-mode .deck-top-label {
+    gap: 6px;
+}
+
+body.mobile-mode .deck-panel-title {
+    font-size: 0.62em;
+}
+
+body.mobile-mode .deck-empty-hint {
+    font-size: 0.7em;
+}
+
+/* Horizontal scroll strip — CRITICAL: row direction, no wrap */
+body.mobile-mode .deck-cards-strip {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 6px;
+    min-height: 115px;
+    max-height: 115px;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 2px 2px 8px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Each card in strip — fixed small size */
+body.mobile-mode .deck-cards-strip .card {
+    width: 78px !important;
+    height: 104px !important;
+    font-size: 0.58em !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    min-width: 78px !important;
+}
+
+body.mobile-mode .deck-cards-strip .card:hover,
+body.mobile-mode .deck-cards-strip .card:active {
+    transform: translateY(-4px) scale(1.04);
+}
+
+/* Remove ✕ hover badge on touch (always show it subtly) */
+body.mobile-mode .deck-cards-strip .card::after {
+    opacity: 0.7;
+    width: 18px;
+    height: 18px;
+    font-size: 0.65em;
+    top: -4px;
+    right: -4px;
+}
+
+/* ── MAIN AREA (all cards) ── */
+body.mobile-mode #deck-builder main {
+    flex-direction: column;
+    overflow: visible;
+    flex: none;
+    min-height: 0;
+}
+
+/* Коли активний таб "Завдання" — main прихований, але challenges-screen-inner
+   потребує висоти. Задаємо через батька #deck-builder flex-layout */
+body.mobile-mode #deck-builder.challenges-active {
+    overflow: hidden;
+}
+body.mobile-mode #deck-builder.challenges-active main {
+    display: none;
+}
+
+body.mobile-mode #all-cards-section {
+    overflow: visible;
+    flex: none;
+}
+
+/* Filter bar — sticky, no left indent */
+body.mobile-mode .deck-filter-bar {
+    padding: 6px 8px !important;
+    gap: 4px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 60px;
+    z-index: 40;
+    background: rgba(8, 10, 22, 0.98);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+body.mobile-mode .filter-btn {
+    padding: 3px 9px;
+    font-size: 0.7em;
+}
+
+body.mobile-mode .deck-sort-select {
+    font-size: 0.7em;
+    padding: 3px 6px;
+}
+
+body.mobile-mode .deck-search {
+    width: 120px;
+    font-size: 0.7em;
+    padding: 3px 9px;
+    margin-left: auto;
+}
+
+/* Cards wrapper — no left indent, scrollable content */
+body.mobile-mode #all-cards-list-wrapper {
+    padding: 8px 8px 80px !important;
+    padding-left: 8px !important;
+    overflow-y: visible;
+    overflow-x: hidden;
+    flex: none;
+}
+
+/* Cards grid — 2-column layout on mobile */
+body.mobile-mode .deck-grid {
+    gap: 8px;
+    justify-content: center;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+body.mobile-mode .deck-grid .card {
+    width: 88px !important;
+    height: 118px !important;
+    font-size: 0.54em !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+}
+
+body.mobile-mode .deck-grid .card:hover,
+body.mobile-mode .deck-grid .card:active {
+    transform: translateY(-4px) scale(1.03);
+}
+
+/* ── COLLECTION TAB — mobile ── */
+body.mobile-mode #all-cards-list.deck-grid {
+    gap: 6px;
+    padding: 6px 4px 80px;
+    justify-content: center;
+}
+
+/* Prevent collection card wrapper from breaking layout */
+body.mobile-mode #all-cards-list > div[style*="inline-block"] {
+    display: inline-block;
+}
+
+/* ── CHALLENGES SCREEN — mobile ── */
+/* challenges-screen-inner stacks vertically on mobile (handled in card-challenges.css) */

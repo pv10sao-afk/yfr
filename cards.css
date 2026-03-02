@@ -1,0 +1,412 @@
+/* ========== CARDS.CSS ==========
+   Картки: базові стилі, внутрішні елементи,
+   рідкість, статуси, скіни, ховер-фліп (новий!)
+   ================================================= */
+
+/* --- Base Card --- */
+.card {
+    width: 120px;
+    height: 160px;
+    background: #ecf0f1;
+    border-radius: 8px;
+    color: #333;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-card);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    font-size: 0.75em;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    z-index: 50;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.card.selected {
+    border: 3px solid var(--color-gold);
+    transform: translateY(-15px);
+}
+
+.card.enemy { background: #95a5a6; }
+
+/* --- Enemy Card --- */
+.card.enemy.revealed {
+    border: 2px solid var(--color-red) !important;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5), inset 0 0 15px rgba(231, 76, 60, 0.1) !important;
+}
+
+.card.enemy.revealed::before {
+    content: '⚔️';
+    position: absolute;
+    top: -8px; right: -8px;
+    font-size: 0.9em;
+    z-index: 10;
+    background: var(--color-red);
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card.enemy.concealed {
+    background: #2c3e50;
+    background-image: repeating-linear-gradient(45deg, #34495e, #34495e 10px, #2c3e50 10px, #2c3e50 20px);
+    border: 2px solid #7f8c8d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card.enemy.concealed > * { display: none; }
+
+.card.enemy.concealed::after {
+    content: "?";
+    font-size: 3em;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Card Internals --- */
+.card-rarity {
+    position: relative;
+    top: auto; right: auto; left: auto;
+    width: 100%;
+    text-align: center;
+    font-size: 0.6em;
+    padding: 2px 0;
+    border-radius: 8px 8px 0 0;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    z-index: 1;
+}
+
+.rarity-common    { background: #7f8c8d; }
+.rarity-rare      { background: var(--color-blue); }
+.rarity-epic      { background: var(--color-purple); }
+.rarity-legendary { background: var(--color-gold); color: var(--color-text-dark); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+    border-bottom: 1px solid #bdc3c7;
+    background: #f8f9fa;
+    border-radius: 0;
+    min-height: 28px;
+}
+
+.card-name {
+    font-weight: bold;
+    font-size: 0.8em;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: none;
+    line-height: 1.1;
+    text-align: left;
+    flex: 1;
+    margin-right: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.card-mana {
+    background: var(--color-blue-dark);
+    color: white;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.card-body {
+    flex: 1;
+    padding: 5px;
+    text-align: center;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+    line-height: 1.2;
+}
+
+.card-body::-webkit-scrollbar { width: 3px; }
+.card-body::-webkit-scrollbar-track { background: transparent; }
+.card-body::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+.card-range {
+    margin-top: 4px;
+    font-weight: bold;
+    color: #d35400;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px;
+    background: #e0e0e0;
+    border-radius: 0 0 8px 8px;
+    font-weight: bold;
+}
+
+.card-damage { color: var(--color-red-dark); }
+.card-armor  { color: #7f8c8d; }
+.card-hp     { color: var(--color-green-dark); }
+
+/* --- Rarity Glow Effects --- */
+.card.legendary {
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.6), 0 0 30px rgba(241, 196, 15, 0.3);
+    animation: legendaryPulse 2s ease-in-out infinite;
+}
+
+.card.epic {
+    box-shadow: 0 0 12px rgba(155, 89, 182, 0.5), 0 0 25px rgba(155, 89, 182, 0.2);
+}
+
+.card.rare {
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.4), 0 0 20px rgba(52, 152, 219, 0.15);
+}
+
+@keyframes legendaryPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(241, 196, 15, 0.6), 0 0 30px rgba(241, 196, 15, 0.3); }
+    50%       { box-shadow: 0 0 25px rgba(241, 196, 15, 0.9), 0 0 50px rgba(241, 196, 15, 0.4); }
+}
+
+/* --- Status Effects --- */
+.card.frozen {
+    box-shadow: inset 0 0 20px rgba(52, 152, 219, 1), 0 0 0 4px var(--color-blue) !important;
+    border: 2px solid var(--color-blue) !important;
+}
+
+.card.lifesteal {
+    box-shadow: inset 0 0 20px rgba(231, 76, 60, 1), 0 0 0 4px var(--color-red) !important;
+    border: 2px solid var(--color-red) !important;
+}
+
+.card.frozen.lifesteal {
+    box-shadow: inset 0 0 20px rgba(142, 68, 173, 1), 0 0 0 4px #8e44ad !important;
+    border: 2px solid #8e44ad !important;
+}
+
+.card.frozen::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(173, 216, 230, 0.4)" width="100" height="100"/><path d="M10 10 L90 90 M90 10 L10 90 M50 0 L50 100 M0 50 L100 50" stroke="rgba(255,255,255,0.6)" stroke-width="2"/></svg>') center/cover;
+    border-radius: 11px;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 5;
+}
+
+.card.taunt {
+    box-shadow: 0 0 0 4px #7f8c8d, 0 0 15px rgba(0, 0, 0, 0.8) !important;
+}
+
+.card.taunt::before {
+    content: '🛡️';
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5em;
+    z-index: 10;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.card.lifesteal::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; left: 50%;
+    transform: translateX(-50%);
+    width: 20px; height: 20px;
+    background: radial-gradient(circle, var(--color-red) 0%, transparent 70%);
+    animation: bloodDrip 1.5s infinite;
+    z-index: 5;
+    pointer-events: none;
+}
+
+@keyframes bloodDrip {
+    0%   { top: 0;    opacity: 0; height: 10px; transform: translateX(-50%) scale(0.5); }
+    20%  { opacity: 1; }
+    80%  { top: 100%; opacity: 1; height: 20px; transform: translateX(-50%) scale(1); }
+    100% { top: 100%; opacity: 0; height: 10px; transform: translateX(-50%) scale(1.5); }
+}
+
+/* ========== HOVER FLIP (нова анімація!) ==========
+   Картка в руці при наведенні робить 3D-оберт.
+   Лицева сторона — звичайна картка.
+   Зворотня — збільшений опис (card-tooltip вже є,
+   тому цей ефект суто декоративний flip-shine).
+   ================================================== */
+.hand-container .card {
+    perspective: 600px;
+}
+
+/* Flip-shine: перед ховером по картці проходить
+   відблиск як від перевертання */
+.hand-container .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.25) 50%,
+        transparent 70%
+    );
+    background-size: 200% 200%;
+    background-position: 200% 0%;
+    opacity: 0;
+    transition: opacity 0.15s, background-position 0.5s ease;
+    pointer-events: none;
+    z-index: 20;
+}
+
+body:not(.no-card-shine) .hand-container .card:hover::before {
+    opacity: 1;
+    background-position: -100% 0%;
+}
+
+/* Повний 3D-фліп для карток у руці:
+   якщо потрібен повноцінний фліп, додайте клас .flip-enabled через JS */
+.hand-container .card.flip-enabled {
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), box-shadow var(--transition-fast);
+}
+
+.hand-container .card.flip-enabled:hover {
+    transform: translateY(-12px) rotateY(12deg) scale(1.05);
+}
+
+/* ========== CARD SKIN THEMES ========== */
+
+/* --- Frost --- */
+.card.card-skin-frost {
+    background: linear-gradient(145deg, #0c2d48, #145374, #0c2d48) !important;
+    border-color: #63b3ed !important;
+    box-shadow: 0 0 12px rgba(99, 179, 237, 0.3), inset 0 0 20px rgba(99, 179, 237, 0.08);
+    color: #e2f0fb !important;
+}
+.card.card-skin-frost .card-header  { background: rgba(99, 179, 237, 0.15); border-bottom-color: rgba(99, 179, 237, 0.3); }
+.card.card-skin-frost .card-name    { color: #bee3f8; }
+.card.card-skin-frost .card-body    { color: #cce5f5; }
+.card.card-skin-frost .card-footer  { background: rgba(99, 179, 237, 0.1); border-top-color: rgba(99, 179, 237, 0.2); }
+.card.card-skin-frost .card-mana    { background: rgba(99, 179, 237, 0.3); color: #bee3f8; }
+.card.card-skin-frost .card-damage,
+.card.card-skin-frost .card-armor,
+.card.card-skin-frost .card-hp     { color: #e8f4fd; }
+.card.card-skin-frost .card-rarity  { color: #a3d5f7; }
+
+/* --- Inferno --- */
+.card.card-skin-inferno {
+    background: linear-gradient(145deg, #3d0c02, #6b1d1d, #3d0c02) !important;
+    border-color: var(--color-red) !important;
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.3), inset 0 0 20px rgba(231, 76, 60, 0.08);
+    color: #fde8e4 !important;
+}
+.card.card-skin-inferno .card-header  { background: rgba(231, 76, 60, 0.15); border-bottom-color: rgba(231, 76, 60, 0.3); }
+.card.card-skin-inferno .card-name    { color: #fcd5cf; }
+.card.card-skin-inferno .card-body    { color: #f5d0ca; }
+.card.card-skin-inferno .card-footer  { background: rgba(231, 76, 60, 0.1); border-top-color: rgba(231, 76, 60, 0.2); }
+.card.card-skin-inferno .card-mana    { background: rgba(231, 76, 60, 0.3); color: #feb2b2; }
+.card.card-skin-inferno .card-damage,
+.card.card-skin-inferno .card-armor,
+.card.card-skin-inferno .card-hp      { color: #fee2dd; }
+.card.card-skin-inferno .card-rarity  { color: #f8b4aa; }
+
+/* --- Nature --- */
+.card.card-skin-nature {
+    background: linear-gradient(145deg, #0d2818, #1a4731, #0d2818) !important;
+    border-color: var(--color-green) !important;
+    box-shadow: 0 0 12px rgba(46, 204, 113, 0.3), inset 0 0 20px rgba(46, 204, 113, 0.08);
+    color: #e0f5e8 !important;
+}
+.card.card-skin-nature .card-header  { background: rgba(46, 204, 113, 0.15); border-bottom-color: rgba(46, 204, 113, 0.3); }
+.card.card-skin-nature .card-name    { color: #c6f6d5; }
+.card.card-skin-nature .card-body    { color: #d4f5de; }
+.card.card-skin-nature .card-footer  { background: rgba(46, 204, 113, 0.1); border-top-color: rgba(46, 204, 113, 0.2); }
+.card.card-skin-nature .card-mana    { background: rgba(46, 204, 113, 0.3); color: #c6f6d5; }
+.card.card-skin-nature .card-damage,
+.card.card-skin-nature .card-armor,
+.card.card-skin-nature .card-hp      { color: #e8f8ee; }
+.card.card-skin-nature .card-rarity  { color: #a8e6c0; }
+
+/* --- Shadow --- */
+.card.card-skin-shadow {
+    background: linear-gradient(145deg, #1a0a2e, #2d1b4e, #1a0a2e) !important;
+    border-color: var(--color-purple) !important;
+    box-shadow: 0 0 15px rgba(155, 89, 182, 0.35), inset 0 0 25px rgba(155, 89, 182, 0.1);
+    color: #ede4f5 !important;
+}
+.card.card-skin-shadow .card-header  { background: rgba(155, 89, 182, 0.18); border-bottom-color: rgba(155, 89, 182, 0.35); }
+.card.card-skin-shadow .card-name    { color: #e2d0f0; }
+.card.card-skin-shadow .card-body    { color: #ddd0ec; }
+.card.card-skin-shadow .card-footer  { background: rgba(155, 89, 182, 0.12); border-top-color: rgba(155, 89, 182, 0.25); }
+.card.card-skin-shadow .card-mana    { background: rgba(155, 89, 182, 0.35); color: #d6bcfa; }
+.card.card-skin-shadow .card-damage,
+.card.card-skin-shadow .card-armor,
+.card.card-skin-shadow .card-hp      { color: #f0e6f8; }
+.card.card-skin-shadow .card-rarity  { color: #c9aae0; }
+
+/* --- Royal --- */
+.card.card-skin-royal {
+    background: linear-gradient(145deg, #2a1a00, #4a3000, #2a1a00) !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.35), inset 0 0 25px rgba(255, 215, 0, 0.08);
+    color: #fff5d6 !important;
+}
+.card.card-skin-royal .card-header  { background: rgba(255, 215, 0, 0.15); border-bottom-color: rgba(255, 215, 0, 0.35); }
+.card.card-skin-royal .card-name    { color: #ffd700; }
+.card.card-skin-royal .card-body    { color: #f5e6b8; }
+.card.card-skin-royal .card-footer  { background: rgba(255, 215, 0, 0.1); border-top-color: rgba(255, 215, 0, 0.25); }
+.card.card-skin-royal .card-mana    { background: rgba(255, 215, 0, 0.3); color: #fefcbf; }
+.card.card-skin-royal .card-damage,
+.card.card-skin-royal .card-armor,
+.card.card-skin-royal .card-hp      { color: #fff8e0; }
+.card.card-skin-royal .card-rarity  { color: #f5d060; }
+
+/* --- Card Tooltip --- */
+#card-tooltip {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    background: rgba(10, 10, 30, 0.95);
+    border: 2px solid rgba(241, 196, 15, 0.6);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    min-width: 200px;
+    max-width: 280px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.15s;
+    color: var(--color-text);
+    font-size: 0.9em;
+}
+
+#card-tooltip.visible { opacity: 1; }
+
+.tooltip-name   { font-size: 1.2em; font-weight: bold; color: var(--color-gold); margin-bottom: 5px; }
+.tooltip-type   { font-size: 0.85em; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 8px; }
+.tooltip-stats  { display: flex; gap: 12px; margin: 8px 0; font-weight: bold; }
+.tooltip-desc   {
+    font-size: 0.9em;
+    color: #bdc3c7;
+    line-height: 1.4;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 8px;
+    margin-top: 8px;
+}

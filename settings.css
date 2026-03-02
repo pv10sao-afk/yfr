@@ -1,0 +1,359 @@
+/* ========== SETTINGS.CSS ==========
+   Екран налаштувань
+   ==================================== */
+
+@keyframes settingsAppear {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Екран ─────────────────────────── */
+#settings-screen {
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,200,50,0.2) transparent;
+}
+
+#settings-screen::-webkit-scrollbar { width: 4px; }
+#settings-screen::-webkit-scrollbar-thumb {
+    background: rgba(255,200,50,0.18);
+    border-radius: 4px;
+}
+
+#settings-screen h1 {
+    font-size: clamp(1.3em, 4vw, 1.9em);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffe066 0%, #ffab00 50%, #c76b00 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: goldShimmer 3s linear infinite;
+    margin: 0;
+    padding: 22px 20px 14px;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 680px;
+    box-sizing: border-box;
+}
+
+/* ── Контент ───────────────────────── */
+.settings-content {
+    width: 100%;
+    max-width: 680px;
+    padding: 0 20px 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ── Секція ────────────────────────── */
+.settings-section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: settingsAppear 0.35s ease-out both;
+}
+
+.settings-section:nth-child(1) { animation-delay: 0.03s; }
+.settings-section:nth-child(2) { animation-delay: 0.07s; }
+.settings-section:nth-child(3) { animation-delay: 0.11s; }
+.settings-section:nth-child(4) { animation-delay: 0.15s; }
+
+.settings-section-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+    background: rgba(255,255,255,0.02);
+}
+
+.settings-section-icon {
+    font-size: 1em;
+    width: 27px; height: 27px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,200,50,0.1);
+    border-radius: 7px;
+    border: 1px solid rgba(255,200,50,0.16);
+    flex-shrink: 0;
+}
+
+.settings-section-title {
+    font-size: 0.75em;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+/* ── Рядок ─────────────────────────── */
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+}
+
+.settings-row:last-child { border-bottom: none; }
+.settings-row:hover { background: rgba(255,255,255,0.02); }
+
+.settings-row-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.settings-row-label {
+    font-size: 0.88em;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+}
+
+.settings-row-desc {
+    font-size: 0.7em;
+    color: rgba(255,255,255,0.32);
+    line-height: 1.3;
+}
+
+/* ── Toggle ────────────────────────── */
+.sett-toggle {
+    position: relative;
+    width: 44px; height: 24px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: block;
+}
+
+.sett-toggle input {
+    opacity: 0; width: 0; height: 0;
+    position: absolute;
+}
+
+.sett-toggle-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.11);
+    transition: all 0.25s;
+}
+
+.sett-toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.45);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+    pointer-events: none;
+}
+
+.sett-toggle input:checked ~ .sett-toggle-track {
+    background: linear-gradient(135deg, #ffcf40, #e07000);
+    border-color: transparent;
+    box-shadow: 0 0 10px rgba(255,160,0,0.3);
+}
+
+.sett-toggle input:checked ~ .sett-toggle-thumb {
+    transform: translateX(20px);
+    background: #fff;
+}
+
+/* ── Слайдер гучності ──────────────── */
+.sett-slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex: 0 0 auto;
+    min-width: 160px;
+}
+
+.sett-slider-icon { font-size: 0.95em; opacity: 0.55; flex-shrink: 0; }
+
+.sett-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    outline: none;
+    cursor: pointer;
+}
+
+.sett-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffcf40, #e07000);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(255,160,0,0.4);
+    border: 2px solid rgba(255,255,255,0.2);
+    transition: transform 0.15s;
+}
+
+.sett-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.sett-slider::-moz-range-thumb {
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffcf40, #e07000);
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.sett-slider-val {
+    font-size: 0.73em;
+    color: rgba(255,255,255,0.45);
+    font-weight: 600;
+    min-width: 30px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* ── Прапорці в кнопках налаштувань ─ */
+.sett-seg-btn .lang-flag {
+    width: 20px;
+    height: 13px;
+    opacity: 1;
+    flex-shrink: 0;
+}
+
+
+.sett-seg {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.sett-seg-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,200,50,0.18);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.42);
+    font-size: 0.77em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: var(--font-base);
+    white-space: nowrap;
+}
+
+.sett-seg-btn:hover {
+    background: rgba(255,200,50,0.08);
+    color: rgba(255,255,255,0.7);
+    border-color: rgba(255,200,50,0.28);
+}
+
+.sett-seg-btn.active {
+    background: linear-gradient(135deg, rgba(255,207,64,0.18), rgba(224,112,0,0.12));
+    border-color: rgba(255,200,50,0.4);
+    color: #ffcf40;
+}
+
+/* ── Кнопки дій ────────────────────── */
+.sett-action {
+    padding: 7px 14px;
+    border-radius: 9px;
+    border: 1px solid;
+    font-size: 0.78em;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-base);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    transition: all 0.18s;
+}
+
+.sett-action.neutral {
+    border-color: rgba(99,179,237,0.28);
+    background: rgba(99,179,237,0.06);
+    color: rgba(147,210,255,0.75);
+}
+.sett-action.neutral:hover {
+    background: rgba(99,179,237,0.14);
+    border-color: rgba(99,179,237,0.5);
+    color: #c3e8ff;
+    transform: translateY(-1px);
+}
+
+.sett-action.warn {
+    border-color: rgba(245,158,11,0.28);
+    background: rgba(245,158,11,0.06);
+    color: rgba(255,200,80,0.75);
+}
+.sett-action.warn:hover {
+    background: rgba(245,158,11,0.14);
+    border-color: rgba(245,158,11,0.5);
+    color: #fde68a;
+    transform: translateY(-1px);
+}
+
+.sett-action.danger {
+    border-color: rgba(239,68,68,0.26);
+    background: rgba(239,68,68,0.05);
+    color: rgba(255,150,130,0.72);
+}
+.sett-action.danger:hover {
+    background: rgba(239,68,68,0.13);
+    border-color: rgba(239,68,68,0.48);
+    color: rgba(255,170,150,0.95);
+    transform: translateY(-1px);
+}
+
+/* ── Версія гри ────────────────────── */
+.settings-version {
+    text-align: center;
+    padding: 10px 20px 20px;
+    color: rgba(255,255,255,0.18);
+    font-size: 0.7em;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.settings-version-num {
+    color: rgba(255,200,50,0.32);
+    font-weight: 700;
+}
+
+/* ── Кнопка назад ──────────────────── */
+.settings-back {
+    max-width: 250px;
+    margin: 0 auto;
+    width: 100%;
+    flex-shrink: 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* ── Адаптив ───────────────────────── */
+@media (max-width: 600px) {
+    #settings-screen h1 { font-size: 1.3em; padding: 15px 14px 10px; }
+    .settings-content { padding: 0 14px 10px; gap: 9px; }
+    .settings-row { padding: 10px 13px; }
+    .settings-back { padding: 0 14px; }
+    .sett-slider-wrap { min-width: 130px; }
+    .sett-seg-btn { padding: 5px 9px; font-size: 0.73em; }
+    .sett-action { padding: 6px 10px; font-size: 0.74em; }
+}

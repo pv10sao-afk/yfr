@@ -1,0 +1,277 @@
+/* ========== MOBILE.CSS ==========
+   Всі body.mobile-mode overrides
+   ================================= */
+
+/* --- Base --- */
+body.mobile-mode { font-size: 16px; }
+
+/* --- Stats Panel --- */
+body.mobile-mode .stats-panel {
+    transform: scale(0.85);
+    margin: 5px auto;
+    padding: 10px;
+    position: static;
+    width: 90%;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.9);
+    box-sizing: border-box;
+    order: -1;
+    transform: none;
+}
+
+body.mobile-mode .stats-panel h3   { margin-bottom: 8px; font-size: 1.1em; }
+body.mobile-mode .stats-content    { gap: 10px; }
+body.mobile-mode .stat-item        { font-size: 0.8em; }
+
+/* --- Menu --- */
+body.mobile-mode .menu-grid {
+    width: 92%;
+    max-width: 420px;
+    gap: 9px;
+}
+
+body.mobile-mode .menu-btn-primary {
+    padding: 18px;
+    font-size: 1.1em;
+}
+
+body.mobile-mode .menu-btn-secondary {
+    padding: 15px 10px;
+    font-size: 0.9em;
+}
+
+/* Стара система кнопок для інших екранів */
+body.mobile-mode .menu-buttons {
+    width: 90%;
+    max-width: 400px;
+    gap: 10px;
+}
+
+body.mobile-mode .menu-btn {
+    padding: 20px;
+    font-size: 1.3em;
+}
+
+/* --- Screen --- */
+body.mobile-mode .screen {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 60px;
+    overflow-y: auto;
+}
+
+body.mobile-mode #main-menu { justify-content: center; }
+
+/* --- Device Controls --- */
+body.mobile-mode .device-controls {
+    top: 10px; left: 10px;
+    transform: none;
+    flex-direction: row;
+}
+
+/* --- Game Container --- */
+body.mobile-mode .game-container {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- Game Main Area --- */
+body.mobile-mode .game-main-area {
+    justify-content: flex-start;
+    padding-top: 20px;
+    align-items: flex-start;
+    overflow-x: auto;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- Grid --- */
+body.mobile-mode .grid-container {
+    width: max-content;
+    height: auto;
+    aspect-ratio: auto;
+    max-height: none;
+    flex-shrink: 0;
+    margin: 0 auto;
+    padding: 10px;
+    min-width: 100%;
+    display: grid;
+    justify-content: center;
+}
+
+body.mobile-mode .grid-container.grid-4x4 {
+    grid-template-columns: repeat(4, 120px);
+    grid-template-rows: repeat(4, 1fr);
+    aspect-ratio: auto;
+    height: auto; width: max-content;
+    max-width: none; max-height: none;
+    gap: 12px;
+    margin: 0 auto;
+}
+
+body.mobile-mode .grid-container.grid-4x4 .card      { font-size: 0.75em; padding: 5px; }
+body.mobile-mode .grid-container.grid-4x4 .card-image { height: auto; margin-bottom: 5px; }
+body.mobile-mode .grid-container.grid-4x4 .card-header { margin-bottom: 0; font-size: 0.8em; padding: 4px 6px; }
+body.mobile-mode .grid-container[style*="repeat(4"] { max-height: none; }
+
+/* --- Grid Slots --- */
+body.mobile-mode .grid-slot {
+    width: 120px !important;
+    height: 160px !important;
+    min-height: 160px;
+    border: 2px dashed rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.mobile-mode .grid-slot .card {
+    width: 120px !important;
+    height: 160px !important;
+    font-size: 0.75em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    margin: 0 !important;
+}
+
+body.mobile-mode .grid-slot .card:hover {
+    transform: none;
+    z-index: 10;
+}
+
+/* --- Log --- */
+body.mobile-mode #message-log {
+    bottom: auto;
+    top: 160px;
+    left: 10px;
+    width: 200px;
+    max-height: 120px;
+}
+
+body.mobile-mode #message-log.minimized {
+    width: auto;
+    min-width: 80px;
+}
+
+/* --- Bottom Bar --- */
+body.mobile-mode .game-bottom-bar {
+    height: auto;
+    min-height: 80px;
+    padding: 10px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+body.mobile-mode .player-stats-area {
+    width: auto;
+    flex: 0 0 auto;
+    min-width: 0;
+    margin-bottom: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+body.mobile-mode .player-stats-area .avatar-container { display: none; }
+
+body.mobile-mode .stats-group { gap: 5px; width: 100px; }
+
+body.mobile-mode .bar-container {
+    width: 100%;
+    min-width: 0;
+    height: 24px;
+}
+
+body.mobile-mode .bar-header { font-size: 1.0em; padding: 0 5px; display: flex; align-items: center; gap: 2px; }
+body.mobile-mode .bar-header > span[class^="lang-"] { font-size: 0.6em; }
+
+body.mobile-mode .hp-text,
+body.mobile-mode .mana-text { font-size: 0.6em; font-weight: bold; line-height: 1; display: flex; align-items: center; gap: 3px; }
+
+body.mobile-mode .hp-text span,
+body.mobile-mode .mana-text span { font-size: 1.4em; }
+
+body.mobile-mode .game-controls-area { flex: 1; gap: 5px; min-width: 0; margin-bottom: 0; justify-content: center; }
+
+body.mobile-mode .action-btn {
+    padding: 5px;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.mobile-mode .btn-content { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; line-height: 1; }
+body.mobile-mode .btn-content .btn-icon { font-size: 1.2em; margin-bottom: 2px; }
+body.mobile-mode .btn-content span:not(.btn-icon) { font-size: 0.5em; display: block; }
+
+body.mobile-mode .player-deck-area { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; margin-top: 0; width: auto; }
+body.mobile-mode .player-deck-area .deck-info-box { display: none; }
+
+body.mobile-mode #discard-pile {
+    width: 40px; height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    background: rgba(231, 76, 60, 0.2);
+    border: 1px solid var(--color-red);
+    border-radius: 50%;
+}
+
+body.mobile-mode .boss-hp-floating { font-size: 0.8em; padding: 1px 4px; bottom: -10px; min-width: 20px; text-align: center; }
+
+/* --- Mobile Hand --- */
+body.mobile-mode .hand-container {
+    flex: 1;
+    min-height: 120px; max-height: 160px;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5px 10px 5px 40px;
+    background: rgba(0, 0, 0, 0.2);
+    margin-bottom: 70px;
+}
+
+body.mobile-mode .hand-container .card {
+    width: 100px !important;
+    height: 140px !important;
+    flex-shrink: 0;
+    margin-right: 5px;
+    transform: none;
+    font-size: 0.6em;
+    transition: transform 0.2s, margin-right 0.2s;
+}
+
+body.mobile-mode .hand-container .card:hover,
+body.mobile-mode .hand-container .card:active {
+    margin-right: 0px;
+    transform: translateY(-40px) scale(1.2);
+    z-index: 100;
+}
+
+body.mobile-mode .hand-container .card:last-child { margin-right: 20px; }
+
+/* Override flip effect on mobile (avoid glitches) */
+body.mobile-mode .hand-container .card::before { display: none; }
+body.mobile-mode .hand-container .card.flip-enabled:hover { transform: translateY(-40px) scale(1.2); }
+
+/* --- Top Bar --- */
+body.mobile-mode .top-bar { width: 100%; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px; }
+body.mobile-mode .player-info { width: 100%; justify-content: space-between; margin-bottom: 5px; }
+
+/* --- Scrollbar --- */
+body.mobile-mode ::-webkit-scrollbar          { width: 5px; height: 5px; }
+body.mobile-mode ::-webkit-scrollbar-thumb    { background: rgba(255, 255, 255, 0.3); border-radius: 3px; }
