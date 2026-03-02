@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Браузерна Карткова Гра</title>
+    <!-- ===== CSS Modules (v8.0) ===== -->
+    <link rel="stylesheet" href="Diz/variables.css">
+    <link rel="stylesheet" href="Diz/base.css">
+    <link rel="stylesheet" href="Diz/menu.css">
+    <link rel="stylesheet" href="Diz/cards.css">
+    <link rel="stylesheet" href="Diz/game.css">
+    <link rel="stylesheet" href="Diz/animations.css">
+    <link rel="stylesheet" href="Diz/modals.css">
+    <link rel="stylesheet" href="Diz/shop.css">
+    <link rel="stylesheet" href="Diz/themes.css">
+    <link rel="stylesheet" href="Diz/campaign.css">
+    <link rel="stylesheet" href="Diz/quests.css">
+    <link rel="stylesheet" href="Diz/achievements.css">
+    <link rel="stylesheet" href="Diz/settings.css">
+    <link rel="stylesheet" href="Diz/mobile.css">
+    <link rel="stylesheet" href="Diz/style-deck-builder.css">
+    <!-- PeerJS SDK -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+
+<body>
+    <!-- Головне Меню -->
+    <div id="main-menu" class="screen">
+        <h1 class="lang-title menu-title">Tactical Hand</h1>
+        <div class="menu-title-line"></div>
+
+        <!-- Панель користувача (показується після входу) -->
+        <div id="user-info-display" class="user-panel hidden">
+            <div class="user-avatar-icon">⚔️</div>
+            <div class="user-panel-info">
+                <span id="user-email-display" class="user-email-text"></span>
+                <span id="user-gold-display" class="user-gold-text">💰 0</span>
+            </div>
+            <div class="user-panel-actions">
+                <button id="stats-toggle-btn" class="icon-btn-menu" onclick="openStatsModal()" title="Статистика" aria-label="Статистика">📊</button>
+            </div>
+        </div>
+
+        <!-- Сітка кнопок меню -->
+        <div class="menu-grid">
+            <!-- Головна кнопка — вся ширина -->
+            <button id="play-bot-btn" class="menu-btn-primary lang-play-bot" aria-label="Грати з ботом">⚔️ Грати з ботом</button>
+
+            <!-- Дві колонки -->
+            <button id="campaign-btn" class="menu-btn-secondary lang-campaign" aria-label="Кампанія">🏰 Кампанія</button>
+            <button id="multiplayer-btn" class="menu-btn-secondary lang-multiplayer" aria-label="Мультиплеєр">🌐 Мультиплеєр</button>
+
+            <button id="deck-btn" class="menu-btn-secondary lang-deck" aria-label="Моя колода">🃏 Колода</button>
+            <button id="shop-btn" class="menu-btn-secondary lang-shop" aria-label="Магазин">🛒 Магазин</button>
+
+            <button id="achievements-btn" class="menu-btn-secondary lang-achievements" aria-label="Досягнення">🏆 Досягнення</button>
+            <button id="quests-btn" class="menu-btn-secondary lang-quests" aria-label="Щоденні завдання">📜 Завдання</button>
+
+            <button id="promo-btn" class="menu-btn-secondary lang-promo-code" aria-label="Ввести промокод">🎁 Промокод</button>
+            <button id="settings-btn" class="menu-btn-secondary lang-settings" aria-label="Налаштування">⚙️ Налаштування</button>
+
+        </div>
+
+    </div>
+
+    <!-- Вибір Режиму -->
+    <div id="mode-selection" class="screen hidden">
+        <h1 class="lang-title">Tactical Hand</h1>
+        <div class="mode-options" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <label class="lang-grid-size" style="color:white; display:block; margin-bottom:5px;">Розмір поля (Grid
+                    Size):</label>
+                <select id="bot-grid-select" class="game-select">
+                    <option value="3">3x3</option>
+                    <option value="4">4x4</option>
+                </select>
+            </div>
+            <div>
+                <label class="lang-game-mode" style="color:white; display:block; margin-bottom:5px;">Режим гри (Game
+                    Mode):</label>
+                <select id="bot-mode-select" class="game-select">
+                    <option value="standard" class="lang-mode-standard">Стандартний (Standard)</option>
+                    <option value="events" class="lang-mode-events">З подіями (With Events)</option>
+                    <option value="draft" class="lang-mode-draft">Драфт (Draft: Pick for self)</option>
+                    <option value="antidraft" class="lang-mode-antidraft">Анти-Драфт (Anti-Draft: Pick for enemy)
+                    </option>
+                    <option value="turbo" class="lang-mode-turbo">Бліц-Мана (Turbo Mode)</option>
+                </select>
+            </div>
+        </div>
+        <div class="menu-buttons">
+            <button id="start-bot-match-btn" class="menu-btn lang-start-btn">Почати</button>
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Multiplayer Screen -->
+    <div id="multiplayer-screen" class="screen hidden">
+        <h1 class="lang-multiplayer">Мультиплеєр</h1>
+        <div id="db-status-badge" style="color: #e74c3c; font-size: 0.8em; margin-bottom: 10px;">
+            <span class="lang-db-connecting">Мережа: Підключення...</span>
+        </div>
+        <div class="menu-buttons">
+            <button id="random-match-btn" class="menu-btn lang-random-match">🎲 Випадковий пошук</button>
+            <button id="create-room-btn" class="menu-btn lang-create-room">Створити гру</button>
+            <button id="join-room-btn" class="menu-btn lang-join-room">Приєднатися до гри</button>
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Create Room Screen -->
+    <div id="create-room-screen" class="screen hidden">
+        <h1 class="lang-create-room">Створити гру</h1>
+        <div class="room-info">
+            <p class="lang-your-room-code">Ваш код кімнати:</p>
+            <div class="room-code-container">
+                <div id="generated-room-code" class="room-code">--------</div>
+                <button class="copy-btn" onclick="copyToClipboard('generated-room-code')" title="Скопіювати">📋</button>
+            </div>
+        </div>
+        <div class="mode-options" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <label class="lang-grid-size" style="color:white; display:block; margin-bottom:5px;">Розмір поля (Grid
+                    Size):</label>
+                <select id="create-grid-select" class="game-select">
+                    <option value="3">3x3</option>
+                    <option value="4">4x4</option>
+                </select>
+            </div>
+            <div>
+                <label class="lang-game-mode" style="color:white; display:block; margin-bottom:5px;">Режим гри (Game
+                    Mode):</label>
+                <select id="create-mode-select" class="game-select">
+                    <option value="standard" class="lang-mode-standard">Стандартний (Standard)</option>
+                    <option value="events" class="lang-mode-events">З подіями (With Events)</option>
+                    <option value="draft" class="lang-mode-draft">Драфт (Draft: Pick for self)</option>
+                    <option value="antidraft" class="lang-mode-antidraft">Анти-Драфт (Anti-Draft: Pick for enemy)
+                    </option>
+                    <option value="turbo" class="lang-mode-turbo">Бліц-Мана (Turbo Mode)</option>
+                </select>
+            </div>
+        </div>
+        <div class="menu-buttons">
+            <button id="start-create-room-btn" class="menu-btn lang-start-btn">Створити гру</button>
+            <button onclick="showScreen('multiplayer-screen')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Waiting Room Screen -->
+    <div id="waiting-room-screen" class="screen hidden">
+        <h2 class="lang-waiting-title">Кімната очікування</h2>
+        <div class="room-info">
+            <p>Код вашої кімнати:</p>
+            <div class="room-code-container">
+                <div id="current-room-id" class="room-code-display">--------</div>
+                <button class="copy-btn" onclick="copyToClipboard('current-room-id')" title="Скопіювати">📋</button>
+            </div>
+        </div>
+        <div id="connection-status" class="connection-status">
+            <div class="loader"></div>
+            <p id="status-text">Очікування другого гравця...</p>
+        </div>
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="location.reload()">Скасувати</button>
+        </div>
+    </div>
+
+    <!-- Join Room Screen -->
+    <div id="join-room-screen" class="screen hidden">
+        <h1 class="lang-join-room-title">Приєднатися до гри</h1>
+        <div class="room-input-container">
+            <input type="text" id="join-code-input" class="lang-placeholder-enter-host-id"
+                placeholder="Введіть ID хоста">
+        </div>
+        <div class="menu-buttons">
+            <button id="confirm-join-btn" class="menu-btn lang-join-confirm">Приєднатися</button>
+            <button onclick="showScreen('multiplayer-screen')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Random Match Selection Screen -->
+    <div id="random-match-screen" class="screen hidden">
+        <h1 class="lang-random-match">Випадкова гра</h1>
+        <p style="text-align:center; margin-bottom: 20px;">Оберіть режим для пошуку суперника</p>
+        <div class="mode-options" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <label class="lang-grid-size" style="color:white; display:block; margin-bottom:5px;">Розмір поля (Grid
+                    Size):</label>
+                <select id="random-grid-select" class="game-select">
+                    <option value="3">3x3</option>
+                    <option value="4">4x4</option>
+                </select>
+            </div>
+            <div>
+                <label class="lang-game-mode" style="color:white; display:block; margin-bottom:5px;">Режим гри (Game
+                    Mode):</label>
+                <select id="random-mode-select" class="game-select">
+                    <option value="standard" class="lang-mode-standard">Стандартний (Standard)</option>
+                    <option value="events" class="lang-mode-events">З подіями (With Events)</option>
+                    <option value="draft" class="lang-mode-draft">Драфт (Draft: Pick for self)</option>
+                    <option value="antidraft" class="lang-mode-antidraft">Анти-Драфт (Anti-Draft: Pick for enemy)
+                    </option>
+                    <option value="turbo" class="lang-mode-turbo">Бліц-Мана (Turbo Mode)</option>
+                </select>
+            </div>
+        </div>
+        <div class="menu-buttons">
+            <button id="start-random-match-btn" class="menu-btn lang-start-btn">Знайти гру</button>
+            <button onclick="showScreen('multiplayer-screen')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Draft Screen -->
+    <div id="draft-screen" class="screen hidden">
+        <h1 class="draft-title">🎲 <span class="lang-draft-title">Драфт</span></h1>
+        <div class="draft-counter">
+            <span class="lang-draft-round">Раунд</span> <span id="draft-round-num">1</span> / <span
+                id="draft-round-max">10</span>
+        </div>
+        <div id="draft-choices" class="draft-choices">
+            <!-- 3 cards rendered here -->
+        </div>
+        <div class="draft-picked-section">
+            <h3 class="lang-draft-picked">Обрані карти:</h3>
+            <div id="draft-picked-list" class="draft-picked-list">
+                <!-- Mini cards shown here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Promo Code Screen -->
+    <div id="promo-screen" class="screen hidden">
+        <h1 class="lang-promo-code">Промокод</h1>
+        <div class="promo-input-container">
+            <input type="text" id="promo-input" class="lang-enter-promo" placeholder="Введіть код...">
+        </div>
+        <div class="menu-buttons">
+            <button id="apply-promo-btn" class="menu-btn lang-apply">Застосувати</button>
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Конструктор Колоди -->
+    <div id="deck-builder" class="screen hidden">
+        <header>
+            <button id="back-to-menu-btn" class="deck-back-btn lang-back" title="← Назад">←</button>
+            <h1 class="lang-deck-title">Конструктор Колоди</h1>
+            <div class="deck-header-right">
+                <div id="deck-slots-info">
+                    <div class="slots-progress-wrap">
+                        <span class="slots-label"><span id="slots-filled">0</span> / 10</span>
+                        <div class="slots-bar">
+                            <div class="slots-bar-fill" id="slots-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="deck-stats-bar" id="deck-stats-bar"></div>
+                <button id="deck-clear-btn" class="deck-clear-btn" title="Очистити колоду">🗑</button>
+            </div>
+        </header>
+
+        <!-- Вкладки: Колода / Колекція / Завдання -->
+        <div class="deck-mode-tabs">
+            <button class="deck-tab-btn active" data-tab="builder" id="tab-builder-btn">🃏 Колода</button>
+            <button class="deck-tab-btn" data-tab="collection" id="tab-collection-btn">📚 Колекція</button>
+            <button class="deck-tab-btn" data-tab="challenges" id="tab-challenges-btn">📜 Завдання</button>
+            <span class="deck-collection-counter" id="deck-collection-counter"></span>
+        </div>
+
+        <!-- Mobile bottom drawer for challenge details -->
+        <div id="cc-mobile-drawer-overlay"></div>
+        <div id="cc-mobile-drawer">
+            <div class="cc-drawer-handle"></div>
+            <div class="cc-drawer-header">
+                <span class="cc-drawer-title" id="cc-drawer-card-name">Завдання</span>
+                <button class="cc-drawer-close" id="cc-drawer-close-btn">✕</button>
+            </div>
+            <div class="cc-drawer-body" id="cc-drawer-content"></div>
+        </div>
+
+        <!-- Challenges Screen (hidden by default) -->
+        <div id="challenges-screen-inner" class="hidden" style="display:none; flex:1; overflow:hidden; flex-direction:row;">
+            <!-- Left: card list -->
+            <div id="cc-card-list-panel">
+                <div id="cc-filters" class="cc-filters"></div>
+                <div id="cc-card-grid" class="cc-card-grid"></div>
+            </div>
+            <!-- Right: detail -->
+            <div id="cc-detail-panel">
+                <div id="cc-detail-content" class="cc-detail-empty">
+                    <div style="font-size:3rem; margin-bottom:12px;">📜</div>
+                    <div style="color:#555; font-size:14px;">Оберіть карту зліва</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP: Your selected deck (visible only in builder tab) -->
+        <section id="selected-deck-section">
+            <div class="deck-top-label">
+                <span class="deck-panel-title lang-your-deck">Ваша колода</span>
+                <div class="deck-empty-hint hidden" id="deck-empty-hint">
+                    <span class="hint-icon">🃏</span>
+                    <span>Натисніть на карти знизу щоб додати</span>
+                </div>
+            </div>
+            <div id="selected-deck-list" class="deck-cards-strip">
+                <!-- full card elements injected by JS -->
+            </div>
+        </section>
+
+        <!-- BOTTOM: All available cards -->
+        <main>
+            <section id="all-cards-section">
+                <div id="all-cards-list-wrapper">
+                    <div id="all-cards-list" class="deck-grid">
+                        <!-- All cards injected by JS -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Ігровий Контейнер -->
+    <div id="game-container" class="screen hidden">
+        <!-- Top Bar: Enemy Info -->
+        <div class="game-top-bar">
+            <div class="player-info enemy">
+                <div class="avatar-container">
+                    <div class="avatar enemy-avatar" id="enemy-avatar-display">💀</div>
+                </div>
+                <div class="stats-group">
+                    <div class="bar-container">
+                        <div class="bar-header">
+                            <span class="lang-enemy">Ворог</span>
+                            <span class="hp-text"><span id="enemy-hp">50</span>/50</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="enemy-hp-bar" class="progress-bar hp-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="bar-container small">
+                        <div class="bar-header">
+                            <span class="lang-enemy-mana">Мана</span>
+                            <span class="mana-text"><span id="enemy-mana">1</span></span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="enemy-mana-bar" class="progress-bar mana-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hand-info-box">
+                    <span class="card-icon">🃏</span>
+                    <span id="enemy-hand-count">0</span>
+                </div>
+            </div>
+
+            <div class="top-center-panel">
+                <div id="turn-indicator" class="turn-badge">Ваш хід</div>
+                <div class="turn-counter-box"><span class="lang-turn">Хід:</span> <span id="turn-count">1</span></div>
+                <div id="turn-timer-container" class="turn-timer-container hidden">
+                    <div id="turn-timer-bar" class="turn-timer-bar"></div>
+                </div>
+            </div>
+
+            <!-- Right spacer / Exit button -->
+            <div class="top-right-panel" style="flex: 1; display: flex; justify-content: flex-end;">
+                <button id="exit-game-btn" class="icon-btn" title="Вийти">❌</button>
+            </div>
+        </div>
+
+        <main class="game-main-area">
+            <section id="game-board">
+                <!-- Bosses are now visual indicators on the field too -->
+                <div id="enemy-boss" class="boss-avatar small-boss">
+                    <div id="enemy-emoji-float" class="floating-emoji hidden"></div>
+                    <div class="boss-icon">😈</div>
+                    <div class="boss-hp-floating"><span id="enemy-hp-float">50</span></div>
+                </div>
+
+                <div id="grid-3x3" class="grid-container">
+                    <!-- Slots generated by JS -->
+                </div>
+
+                <div id="player-boss" class="boss-avatar small-boss">
+                    <div id="player-emoji-float" class="floating-emoji hidden"></div>
+                    <div class="boss-icon">🛡️</div>
+                    <div class="boss-hp-floating"><span id="player-hp-float">50</span></div>
+                </div>
+            </section>
+
+            <section id="player-hand-container">
+                <div id="player-hand" class="hand-container"></div>
+            </section>
+        </main>
+
+        <!-- Bottom Bar: Player Info & Controls -->
+        <div class="game-bottom-bar">
+            <!-- Left: Player Stats -->
+            <div class="player-stats-area">
+                <div class="avatar-container">
+                    <div class="avatar player-avatar" id="player-avatar-display">❤️</div>
+                </div>
+                <div class="stats-group">
+                    <div class="bar-container">
+                        <div class="bar-header">
+                            <span class="lang-you">Ви</span>
+                            <span class="hp-text"><span id="player-hp">50</span>/50</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="player-hp-bar" class="progress-bar hp-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="bar-container small">
+                        <div class="bar-header">
+                            <span class="lang-mana">Мана</span>
+                            <span class="mana-text"><span id="current-mana">1</span></span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="player-mana-bar" class="progress-bar mana-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center: Action Buttons -->
+            <div class="game-controls-area">
+                <button id="attack-btn" class="action-btn attack-btn">
+                    <div class="btn-content">
+                        <span class="btn-icon">⚔️</span>
+                        <span class="lang-attack-btn">Атака</span>
+                    </div>
+                </button>
+                <button id="end-turn-btn" class="action-btn end-turn-btn">
+                    <div class="btn-content">
+                        <span class="btn-icon">⏳</span>
+                        <span class="lang-end-turn">Кінець</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Right: Deck, Discard & Emotes -->
+            <div class="player-deck-area">
+                <div class="deck-info-box" title="Карт залишилось у колоді">
+                    <span>📚</span>
+                    <span id="deck-count">10</span>
+                </div>
+                <div id="discard-pile" class="discard-mini-btn" title="Скинути карту">
+                    <span>🗑️</span>
+                </div>
+                <div id="emoji-btn" class="discard-mini-btn" title="Сказати" onclick="toggleEmojiMenu()">
+                    <span>💬</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="message-log">
+            <div id="log-header" onclick="toggleLog()">
+                <span class="log-title lang-log-title">Лог гри</span>
+                <button id="log-toggle-btn">▼</button>
+            </div>
+            <div id="log-content">
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="game-over-title">GAME OVER</h2>
+            <p id="game-over-message"></p>
+            <button id="game-over-menu-btn" class="menu-btn">Menu</button>
+        </div>
+    </div>
+
+    <!-- Universal Custom Modal -->
+    <div id="custom-modal" class="custom-modal hidden">
+        <div class="custom-modal-content">
+            <h2 id="custom-modal-title" class="custom-modal-title">Повідомлення</h2>
+            <div id="custom-modal-body" class="custom-modal-body"></div>
+            <button id="custom-modal-ok-btn" class="custom-modal-btn">ОК</button>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content auth-modal-content">
+            <h2 id="auth-modal-title">Вхід</h2>
+            <input type="email" id="auth-email" placeholder="Email" class="auth-input">
+            <input type="password" id="auth-password" placeholder="Пароль" class="auth-input">
+            <div class="auth-buttons">
+                <button id="auth-submit-btn" class="menu-btn" onclick="handleAuthSubmit()">Увійти</button>
+                <button id="auth-modal-close-btn" class="menu-btn close-btn"
+                    onclick="closeAuthModal()">Скасувати</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="stats-modal" class="modal hidden">
+        <div id="stats-panel-modal" class="stats-modal-content">
+            <div class="stats-modal-header">
+                <span class="stats-trophy">🏆</span>
+                <h2 class="lang-stats-title">Статистика</h2>
+            </div>
+            <div class="stats-cards">
+                <div class="stats-card">
+                    <div class="stats-card-icon">🤖</div>
+                    <h4 class="lang-stats-bot">Бот</h4>
+                    <div class="stats-row"><span class="stats-label">🎮 <span
+                                class="lang-stat-played">Ігор</span></span><span class="stats-value"
+                            id="stat-bot-played">0</span></div>
+                    <div class="stats-row win"><span class="stats-label">✅ <span
+                                class="lang-stat-won">Перемог</span></span><span class="stats-value"
+                            id="stat-bot-won">0</span></div>
+                    <div class="stats-row lose"><span class="stats-label">❌ <span
+                                class="lang-stat-lost">Поразок</span></span><span class="stats-value"
+                            id="stat-bot-lost">0</span></div>
+                    <div class="stats-winrate-bar">
+                        <div class="stats-winrate-fill" id="bot-winrate-fill"></div>
+                    </div>
+                    <div class="stats-winrate-text" id="bot-winrate-text">0%</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-card-icon">🌐</div>
+                    <h4 class="lang-stats-multi">Мультиплеєр</h4>
+                    <div class="stats-row"><span class="stats-label">🎮 <span
+                                class="lang-stat-played">Ігор</span></span><span class="stats-value"
+                            id="stat-multi-played">0</span></div>
+                    <div class="stats-row win"><span class="stats-label">✅ <span
+                                class="lang-stat-won">Перемог</span></span><span class="stats-value"
+                            id="stat-multi-won">0</span></div>
+                    <div class="stats-row lose"><span class="stats-label">❌ <span
+                                class="lang-stat-lost">Поразок</span></span><span class="stats-value"
+                            id="stat-multi-lost">0</span></div>
+                    <div class="stats-winrate-bar">
+                        <div class="stats-winrate-fill" id="multi-winrate-fill"></div>
+                    </div>
+                    <div class="stats-winrate-text" id="multi-winrate-text">0%</div>
+                </div>
+            </div>
+            <button class="stats-close-btn" onclick="closeStatsModal()">✕</button>
+        </div>
+    </div>
+
+    <!-- Campaign Screen -->
+    <div id="campaign-screen" class="screen hidden">
+        <h1 class="lang-campaign">🏰 Кампанія</h1>
+        <div id="campaign-grid" class="campaign-grid"></div>
+        <div class="menu-buttons" style="max-width:250px;margin-top:15px;">
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Quests Screen -->
+    <div id="quests-screen" class="screen hidden">
+        <h1 class="lang-quests">📜 Завдання</h1>
+        <div class="menu-buttons">
+            <button id="daily-quests-btn" class="menu-btn lang-daily-quests">Щоденні завдання</button>
+            <button id="battle-pass-btn" class="menu-btn lang-battle-pass"
+                onclick="showAlert('Батл пас', 'Ця функція знаходиться у розробці!', '⭐')">Батл пас</button>
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Daily Quests Screen -->
+    <div id="daily-quests-screen" class="screen hidden">
+        <h1 class="lang-daily-quests">Щоденні завдання</h1>
+        <div id="daily-quests-list" class="quests-list">
+            <!-- Quests injected by JS -->
+        </div>
+        <div class="menu-buttons" style="max-width:250px;margin-top:15px;">
+            <button onclick="showScreen('quests-screen')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Achievements Screen -->
+    <div id="achievements-screen" class="screen hidden">
+        <h1 class="lang-achievements">🏆 Досягнення</h1>
+        <div id="achievements-stats-row"></div>
+        <div class="achievements-tabs-wrap">
+            <div id="achievements-tabs"></div>
+        </div>
+        <div id="achievements-list"></div>
+        <div class="achievements-back-btn menu-buttons">
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen hidden">
+        <h1 class="lang-settings">⚙️ Налаштування</h1>
+        <div class="settings-content">
+
+            <!-- 🔊 Звук -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <span class="settings-section-icon">🔊</span>
+                    <span class="settings-section-title lang-settSoundTitle">Звук</span>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settSoundEnabled">Звукові ефекти</span>
+                        <span class="settings-row-desc lang-settSoundEnabledDesc">Вмикає всі звуки гри</span>
+                    </div>
+                    <label class="sett-toggle">
+                        <input type="checkbox" id="sett-sound-toggle" onchange="settOnSoundToggle(this.checked)">
+                        <span class="sett-toggle-track"></span>
+                        <span class="sett-toggle-thumb"></span>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settVolume">Гучність</span>
+                    </div>
+                    <div class="sett-slider-wrap">
+                        <span class="sett-slider-icon">🔈</span>
+                        <input type="range" class="sett-slider" id="sett-vol-slider" min="0" max="100" step="5" oninput="settOnVolumeChange(this.value)">
+                        <span class="sett-slider-icon">🔊</span>
+                        <span class="sett-slider-val" id="sett-vol-val">30%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🎮 Геймплей -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <span class="settings-section-icon">🎮</span>
+                    <span class="settings-section-title lang-settGameplayTitle">Геймплей</span>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settAnimations">Анімації карт</span>
+                        <span class="settings-row-desc lang-settAnimationsDesc">Плавні анімації під час гри</span>
+                    </div>
+                    <label class="sett-toggle">
+                        <input type="checkbox" id="sett-anim-toggle" onchange="settOnAnimToggle(this.checked)">
+                        <span class="sett-toggle-track"></span>
+                        <span class="sett-toggle-thumb"></span>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settExitConfirm">Підтвердження виходу</span>
+                        <span class="settings-row-desc lang-settExitConfirmDesc">Питати перед виходом з матчу</span>
+                    </div>
+                    <label class="sett-toggle">
+                        <input type="checkbox" id="sett-confirm-toggle" onchange="settOnConfirmToggle(this.checked)">
+                        <span class="sett-toggle-track"></span>
+                        <span class="sett-toggle-thumb"></span>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settTips">Підказки в грі</span>
+                        <span class="settings-row-desc lang-settTipsDesc">Показувати навчальні підказки</span>
+                    </div>
+                    <label class="sett-toggle">
+                        <input type="checkbox" id="sett-tips-toggle" onchange="settOnTipsToggle(this.checked)">
+                        <span class="sett-toggle-track"></span>
+                        <span class="sett-toggle-thumb"></span>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label">Блиск карт</span>
+                        <span class="settings-row-desc">Напівпрозора біла смуга при наведенні на карту</span>
+                    </div>
+                    <label class="sett-toggle">
+                        <input type="checkbox" id="sett-cardshine-toggle" onchange="settOnCardShineToggle(this.checked)">
+                        <span class="sett-toggle-track"></span>
+                        <span class="sett-toggle-thumb"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 🖥️ Інтерфейс -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <span class="settings-section-icon">🖥️</span>
+                    <span class="settings-section-title lang-settInterfaceTitle">Інтерфейс</span>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settLanguage">Мова</span>
+                    </div>
+                    <div class="sett-seg">
+                        <button class="sett-seg-btn sett-lang-btn" data-lang="uk" onclick="settSetLang('uk')"><span class="lang-flag flag-ua"></span> UA</button>
+                        <button class="sett-seg-btn sett-lang-btn" data-lang="en" onclick="settSetLang('en')"><span class="lang-flag flag-us"></span> EN</button>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settDevice">Режим пристрою</span>
+                        <span class="settings-row-desc lang-settDeviceDesc">ПК або мобільний вигляд</span>
+                    </div>
+                    <div class="sett-seg">
+                        <button class="sett-seg-btn sett-device-btn" data-mode="pc" onclick="settSetDevice('pc')">🖥 ПК</button>
+                        <button class="sett-seg-btn sett-device-btn" data-mode="mobile" onclick="settSetDevice('mobile')">📱 Mobile</button>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settFullscreen">Повноекранний режим</span>
+                    </div>
+                    <button class="sett-action neutral" onclick="settToggleFullscreen()">⛶ <span class="lang-settFullscreenBtn">Увімкнути</span></button>
+                </div>
+            </div>
+
+            <!-- 👤 Акаунт -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <span class="settings-section-icon">👤</span>
+                    <span class="settings-section-title lang-settAccountTitle">Акаунт</span>
+                </div>
+                <div class="settings-row" id="sett-row-login">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settLogin">Увійти в акаунт</span>
+                        <span class="settings-row-desc lang-settLoginDesc">Збереження прогресу в хмарі</span>
+                    </div>
+                    <button class="sett-action neutral" onclick="settOpenLogin()">🔑 <span class="lang-login">Вхід</span></button>
+                </div>
+                <div class="settings-row" id="sett-row-register">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settRegister">Зареєструватись</span>
+                        <span class="settings-row-desc lang-settRegisterDesc">Створити новий акаунт</span>
+                    </div>
+                    <button class="sett-action neutral" onclick="settOpenRegister()">📝 <span class="lang-register">Реєстрація</span></button>
+                </div>
+                <div class="settings-row" id="sett-row-changepass">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settChangePass">Змінити пароль</span>
+                        <span class="settings-row-desc lang-settChangePassDesc">Надіслати лист на пошту</span>
+                    </div>
+                    <button class="sett-action warn" onclick="settChangePassword()">🔑 <span class="lang-settChangePassBtn">Змінити</span></button>
+                </div>
+                <div class="settings-row" id="sett-row-reset">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settResetProgress">Скинути прогрес</span>
+                        <span class="settings-row-desc lang-settResetProgressDesc">Видалити золото, карти, статистику</span>
+                    </div>
+                    <button class="sett-action danger" onclick="settResetProgress()">🗑 <span class="lang-settResetBtn">Скинути</span></button>
+                </div>
+                <div class="settings-row" id="sett-row-logout">
+                    <div class="settings-row-left">
+                        <span class="settings-row-label lang-settLogout">Вийти з акаунту</span>
+                    </div>
+                    <button class="sett-action danger" onclick="settLogout()">🚪 <span class="lang-logout">Вихід</span></button>
+                </div>
+            </div>
+
+        </div>
+        <div class="settings-version">Tactical Hand &nbsp;<span class="settings-version-num">v8.4</span></div>
+        <div class="settings-back menu-buttons">
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Shop Screen -->
+    <div id="shop-screen" class="screen hidden">
+        <h1 class="lang-shop">🛒 Магазин</h1>
+        <div id="shop-gold" class="shop-gold-display">💰 0</div>
+        <div class="shop-tabs" id="shop-tabs">
+            <button class="shop-tab active" data-tab="packs">📦 Паки</button>
+            <button class="shop-tab" data-tab="avatars">😊 Аватари</button>
+            <button class="shop-tab" data-tab="skins">🎨 Дизайни</button>
+            <button class="shop-tab" data-tab="board">🗺️ Поле</button>
+            <button class="shop-tab" data-tab="themes">✨ Теми</button>
+            <button class="shop-tab" data-tab="emojis">💬 Емодзі</button>
+        </div>
+        <div id="shop-container" class="shop-container"></div>
+        <div class="menu-buttons" style="max-width:250px;margin-top:15px;">
+            <button onclick="showScreen('main-menu')" class="menu-btn lang-back">← Назад</button>
+        </div>
+    </div>
+
+    <!-- Card Tooltip -->
+    <div id="card-tooltip"></div>
+
+    <!-- Pack Opening Overlay -->
+    <div id="pack-opening-overlay" class="hidden">
+        <div class="pack-particles" id="pack-particles"></div>
+        <div class="pack-card-scene">
+            <div class="pack-card-flipper" id="pack-card-flipper">
+                <div class="pack-card-front">
+                    <div class="pack-card-face-content"></div>
+                </div>
+                <div class="pack-card-back">
+                    <div class="pack-card-back-pattern">?</div>
+                </div>
+            </div>
+        </div>
+        <div class="pack-rarity-label" id="pack-rarity-label"></div>
+        <div class="pack-card-name" id="pack-card-name"></div>
+        <button class="pack-skip-btn lang-pack-skip" id="pack-skip-btn">Натисніть щоб продовжити</button>
+    </div>
+
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="hidden"></div>
+
+    <!-- Sound Toggle removed: available in Settings -->
+
+    <!-- Emoji Picker Modal -->
+    <div id="emoji-picker-container" class="hidden">
+        <!-- Generated dynamically in JS based on equippedEmojis -->
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="game-toast-container"></div>
+
+    <link rel="stylesheet" href="Diz/card-challenges.css">
+    <script defer src="store.js"></script>
+    <script defer src="gameK/card-challenges.js"></script>
+    <script defer src="cards.js"></script>
+    <script defer src="gameK/constants.js"></script>
+    <script defer src="gameK/sound.js"></script>
+    <script defer src="gameK/progression.js"></script>
+    <script defer src="gameK/translations.js"></script>
+    <script defer src="gameK/ui.js"></script>
+    <script defer src="gameK/tutorial.js"></script>
+    <script defer src="gameK/quests.js"></script>
+    <script defer src="achievements.js"></script>
+    <script defer src="settings.js"></script>
+    <script defer src="gameK/shop.js"></script>
+    <script defer src="gameK/campaign.js"></script>
+    <script defer src="gameK/deck-builder.js"></script>
+    <script defer src="gameK/draft.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth.js?v=3"></script>
+    <script defer src="gameK/game-effects.js"></script>
+    <script defer src="gameK/game.js?v=4"></script>
+    <script defer src="gameK/game-combat.js?v=1"></script>
+    <script defer src="gameK/game-renderer.js?v=1"></script>
+    <script defer src="gameK/game-network.js?v=1"></script>
+    <script defer src="gameK/game-ai.js?v=2"></script>
+</body>
+
+</html>
